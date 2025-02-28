@@ -24,6 +24,12 @@ export const Footer: FunctionComponent = () => {
             <DarkModeToggle />
           </div>
           <MinimalNewsletter />
+          <Link 
+            href="/admin" 
+            className="text-[10px] text-gray-400 hover:text-gray-500 dark:text-gray-600 dark:hover:text-gray-500 transition-colors mt-4"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </footer>

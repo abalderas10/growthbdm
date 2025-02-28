@@ -9,9 +9,11 @@ import ArrowRight from '@/components/icons/ArrowRight';
 import AliestGrowth from "@/components/AliestGrowth";
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { FloatingContactModal } from "@/components/FloatingContactModal";
 
 const Page = () => {
   const [activeSection, setActiveSection] = useState(0);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,13 +83,13 @@ const Page = () => {
                     <footer className="mt-2 text-sm text-gray-600 dark:text-gray-400">- Adriana Vargas</footer>
                   </blockquote>
                   <div className="pt-4">
-                    <Link 
-                      href="/contact"
-                      className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-gray-900 hover:opacity-90 transition-opacity"
+                    <button 
+                      onClick={() => setIsContactModalOpen(true)}
+                      className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       Agenda una Reunión
-                      <ArrowRight className="ml-2 -mr-1 h-6 w-6" />
-                    </Link>
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -144,6 +146,33 @@ const Page = () => {
                 />
               </div>
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-xl font-semibold text-white mb-3">Incrementa tus Oportunidades</h3>
+                <p className="text-gray-300">Multiplica tus oportunidades comerciales con leads de alto valor</p>
+              </div>
+              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-xl font-semibold text-white mb-3">Posiciona Tu Marca</h3>
+                <p className="text-gray-300">Fortalece tu presencia en eventos clave y medios especializados</p>
+              </div>
+              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-xl font-semibold text-white mb-3">Fortalece Relaciones</h3>
+                <p className="text-gray-300">Conecta con desarrolladores y tomadores de decisiones clave</p>
+              </div>
+              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                <h3 className="text-xl font-semibold text-white mb-3">Ofrece Ingenierías de Valor</h3>
+                <p className="text-gray-300">Aporta soluciones innovadoras y genera sinergias</p>
+              </div>
+            </div>
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setIsContactModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full hover:bg-gray-100 transition-colors text-lg font-medium"
+              >
+                ¡Agenda una Reunión!
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </section>
 
@@ -155,6 +184,12 @@ const Page = () => {
           </div>
         </section>
       </main>
+      <FloatingContactModal 
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        title="Agenda una Reunión"
+        subtitle="Déjanos tus datos y nos pondremos en contacto contigo"
+      />
       <Footer />
     </div>
   );

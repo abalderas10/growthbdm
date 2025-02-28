@@ -3,6 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const contactSchema = z.object({
   name: z.string().min(2, "El nombre es muy corto"),
@@ -25,18 +27,25 @@ export function ContactForm() {
 
   const onSubmit = async (data: ContactForm) => {
     try {
-      const response = await fetch("/api/contact", {
+      // Insertar en Supabase
+      const { error: supabaseError } = await supabase
+        .from('contact_forms')
+        .insert([data]);
+
+      if (supabaseError) throw supabaseError;
+
+      // Enviar notificación por email (opcional)
+      await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
-      if (!response.ok) throw new Error("Error al enviar");
       
       reset();
-      alert("Mensaje enviado correctamente");
+      toast.success("Mensaje enviado correctamente");
     } catch (error) {
-      alert("Error al enviar el mensaje");
+      console.error('Error al enviar el formulario:', error);
+      toast.error("Error al enviar el mensaje. Por favor, intenta de nuevo.");
     }
   };
 
@@ -49,9 +58,12 @@ export function ContactForm() {
         <input
           {...register("name")}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Tu nombre"
         />
         {errors.name && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.name.message}
+          </p>
         )}
       </div>
 
@@ -63,9 +75,12 @@ export function ContactForm() {
           type="email"
           {...register("email")}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="tu@email.com"
         />
         {errors.email && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
@@ -76,6 +91,7 @@ export function ContactForm() {
         <input
           {...register("company")}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="Nombre de tu empresa"
         />
       </div>
 
@@ -87,16 +103,19 @@ export function ContactForm() {
           {...register("message")}
           rows={4}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          placeholder="¿En qué podemos ayudarte?"
         />
         {errors.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.message.message}
+          </p>
         )}
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#004b8d] hover:bg-[#003366] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors duration-200"
+        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? "Enviando..." : "Enviar mensaje"}
       </button>

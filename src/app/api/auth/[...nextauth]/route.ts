@@ -1,55 +1,38 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 
 const handler = NextAuth({
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
-        // Aquí puedes agregar más usuarios según necesites
-        const validUsers = [
-          { id: "1", name: "Admin", email: "admin@growthbdm.com", password: "admin123" }
-        ];
-
-        const user = validUsers.find(
-          (user) => 
-            credentials?.username === user.email && 
-            credentials?.password === user.password
-        );
-
-        if (user) {
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email
-          };
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
+      authorization: {
+        params: {
+          prompt: "select_account",
         }
-
-        return null;
       }
-    })
+    }),
   ],
-  pages: {
-    signIn: '/dashboard/login',
-  },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        const email = profile?.email;
+        return email?.endsWith("@growthbdm.com") || 
+               email === "alberto.balderas@growthbdm.com" || 
+               email === "adriana.vargas@growthbdm.com";
       }
-      return token;
+      return false;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-      }
+    async session({ session }) {
       return session;
     },
   },
+  pages: {
+    signIn: '/dashboard/login',
+    error: '/dashboard/error',
+  },
+  debug: process.env.NODE_ENV === 'development',
 })
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
