@@ -1,75 +1,35 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import Link from "next/link";
+import { Pagination } from "@wisp-cms/client";
 
 export const BlogPostsPagination = ({
   pagination,
-  basePath = "/?page=",
-  numSiblingPages = 2,
 }: {
-  basePath?: string;
-  numSiblingPages?: number;
-  pagination: {
-    page: number;
-    limit: number | "all";
-    totalPages: number;
-    nextPage: number | null;
-    prevPage: number | null;
-  };
+  pagination: Pagination;
 }) => {
   return (
-    <Pagination>
-      <PaginationContent>
-        {pagination.prevPage && (
-          <PaginationItem>
-            <PaginationPrevious href={`${basePath}${pagination.prevPage}`} />
-          </PaginationItem>
-        )}
-        {pagination.page > 3 && (
-          <>
-            <PaginationItem>
-              <PaginationLink href={`${basePath}1`}>1</PaginationLink>
-            </PaginationItem>
-            <PaginationEllipsis />
-          </>
-        )}
-        {Array.from({ length: pagination.totalPages }, (_, index) => index + 1)
-          .filter(
-            (pageNumber) =>
-              Math.abs(pagination.page - pageNumber) <= numSiblingPages
-          )
-          .map((pageNumber) => (
-            <PaginationItem key={pageNumber}>
-              <PaginationLink
-                href={`${basePath}${pageNumber}`}
-                isActive={pageNumber === pagination.page}
-              >
-                {pageNumber}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-        {pagination.page < pagination.totalPages - 2 && (
-          <>
-            <PaginationEllipsis />
-            <PaginationItem>
-              <PaginationLink href={`${basePath}${pagination.totalPages}`}>
-                {pagination.totalPages}
-              </PaginationLink>
-            </PaginationItem>
-          </>
-        )}
-        {pagination.nextPage && (
-          <PaginationItem>
-            <PaginationNext href={`${basePath}${pagination.nextPage}`} />
-          </PaginationItem>
-        )}
-      </PaginationContent>
-    </Pagination>
+    <div className="flex justify-center space-x-4">
+      {pagination.currentPage > 1 && (
+        <Link
+          href={`/blog?page=${pagination.currentPage - 1}`}
+          className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-300 rounded-md hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-gray-700 transition-colors duration-200"
+        >
+          <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Anterior
+        </Link>
+      )}
+      {pagination.currentPage < pagination.totalPages && (
+        <Link
+          href={`/blog?page=${pagination.currentPage + 1}`}
+          className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-300 rounded-md hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-gray-700 transition-colors duration-200"
+        >
+          Siguiente
+          <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      )}
+    </div>
   );
 };

@@ -1,56 +1,184 @@
+'use client';
+
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
-import Markdown from "react-markdown";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { useInView } from "react-intersection-observer";
 
-const content = `# About Me
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
 
-![Samantha](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/db7abbe3-aa5c-433e-a16d-cbf137d1c9e5.png/public)
+const staggerChildren = {
+  visible: {
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
 
-Hey there! I'm Samantha, a 28-year-old former corporate warrior who decided to ditch the 9-to-5 grind and embark on an adventure of a lifetime. After years of hustling in a high-pressure job, I realized that life is too short to be stuck in an office, staring at spreadsheets all day.
+const Page = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
 
-So I took a leap of faith, quit my cushy job in Singapore, and decided to see the world on my own terms. No more stuffy meetings or rigid schedules – just me, my backpack, and an open road ahead.
-
-![Samantha](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/6b080e65-2329-4a36-ad5c-0a6af8d9aeb1.png/public)
-
-This blog is where I'll be documenting my travels, sharing my experiences, and hopefully inspiring others to follow their wanderlust. From trekking through remote villages to savoring local cuisines, I'm on a mission to immerse myself in different cultures and create memories that will last a lifetime.
-
-But this journey isn't just about checking off destinations from a bucket list. It's about self-discovery, personal growth, and finding the courage to live life on my own terms. I'll be honest and raw, sharing the highs and lows, the moments of pure bliss and the inevitable challenges that come with solo travel.
-
-So join me on this adventure, and let's explore the world together! Who knows, maybe my stories will inspire you to take that leap of faith and pursue your own dreams, whatever they may be.
-
-Let's go on an adventure!
-
-Love,
-
-Samantha`;
-
-export async function generateMetadata() {
-  return {
-    title: "About Me",
-    description: "Learn more about Samantha and her travel adventures",
-    openGraph: {
-      title: "About Me",
-      description: "Learn more about Samantha and her travel adventures",
-      images: [
-        signOgImageUrl({
-          title: "Samantha",
-          label: "About Me",
-          brand: config.blog.name,
-        }),
-      ],
-    },
-  };
-}
-
-const Page = async () => {
   return (
-    <div className="container mx-auto px-5">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
       <Header />
-      <div className="prose lg:prose-lg dark:prose-invert m-auto mt-20 mb-10 blog-content">
-        <Markdown>{content}</Markdown>
-      </div>
+      
+      {/* Hero Section */}
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/10 to-white/20 dark:from-transparent dark:via-blue-900/10 dark:to-gray-900/20"></div>
+        </div>
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerChildren}
+            className="max-w-4xl mx-auto text-center space-y-8"
+          >
+            <motion.h1 
+              variants={fadeInUp}
+              className="text-6xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-gray-900 dark:from-blue-400 dark:to-gray-300 mb-8"
+            >
+              Growth Business Development
+            </motion.h1>
+            <motion.p 
+              variants={fadeInUp}
+              className="text-2xl text-gray-600 dark:text-gray-300 mb-16 leading-relaxed"
+            >
+              Impulsamos la expansión y el crecimiento de empresas con soluciones estratégicas, 
+              tecnología avanzada e inteligencia de negocios.
+            </motion.p>
+            <motion.div
+              variants={fadeInUp}
+              className="flex justify-center gap-6"
+            >
+              <div className="w-20 h-1 bg-blue-600/20 rounded-full"></div>
+              <div className="w-20 h-1 bg-blue-600/40 rounded-full"></div>
+              <div className="w-20 h-1 bg-blue-600/60 rounded-full"></div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Misión y Visión */}
+      <section className="py-20 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <motion.div
+              ref={ref}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              variants={fadeInUp}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">Nuestra Misión</h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                Facilitamos el desarrollo y la internacionalización de empresas a través de herramientas innovadoras, 
+                automatización inteligente y estrategias de expansión adaptadas a las necesidades de cada cliente.
+              </p>
+            </motion.div>
+            
+            <motion.div
+              ref={ref}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              variants={fadeInUp}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">Nuestra Visión</h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                Ser el aliado estratégico de referencia para empresas que buscan crecimiento sostenible, 
+                expansión global y transformación digital en un mundo cada vez más interconectado.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Servicios */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.h2 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            className="text-3xl font-bold text-center mb-16"
+          >
+            ¿Qué Hacemos?
+          </motion.h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {[
+              {
+                title: "Automatización y Tecnología",
+                description: "Implementamos IA y automatización para optimizar ventas, atención al cliente y gestión operativa.",
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                )
+              },
+              {
+                title: "Expansión Internacional",
+                description: "Facilitamos la entrada de empresas a nuevos mercados, conectándolas con inversores y socios estratégicos.",
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                  </svg>
+                )
+              },
+              {
+                title: "Consultoría en Desarrollo",
+                description: "Diseñamos estrategias personalizadas para maximizar el crecimiento y la rentabilidad.",
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                )
+              },
+              {
+                title: "Marketing Digital",
+                description: "Creamos campañas de alto impacto basadas en datos y en tendencias de mercado.",
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                  </svg>
+                )
+              }
+            ].map((service, index) => (
+              <motion.div
+                key={index}
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { delay: index * 0.2 }
+                  }
+                }}
+                className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                <div className="mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{service.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{service.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

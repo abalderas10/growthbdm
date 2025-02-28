@@ -5,8 +5,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { Header } from "@/components/Header";
+import { Toaster } from "sonner";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
@@ -32,15 +36,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es" className="h-full">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased max-w-6xl m-auto",
+          `${inter.className} flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-gray-50 dark:from-gray-900 dark:to-blue-900`,
           fontSans.variable
         )}
       >
         <Providers>
-          <main>{children}</main>
+          <AuthProvider>
+            <Header />
+            {children}
+            <Toaster richColors position="top-right" />
+          </AuthProvider>
         </Providers>
       </body>
     </html>

@@ -1,86 +1,110 @@
 "use client";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { config } from "@/config";
-import { cn } from "@/lib/utils";
-import { Menu } from "lucide-react";
+
+import { useState } from 'react';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FunctionComponent } from "react";
-interface MenuItem {
-  name: string;
-  href: string;
-  openInNewTab?: boolean;
-}
-const menuItems: MenuItem[] = [
-  { name: "Blog", href: "/" },
-  { name: "About", href: "/about" },
-];
-export const Navigation: FunctionComponent = () => {
-  const pathname = usePathname();
+import Image from "next/image";
+import { Menu, X } from 'lucide-react';
+import { Button } from "./ui/button";
+
+export const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav>
-      <div className="hidden md:flex items-center">
-        {menuItems.map((item) => (
-          <div key={item.href} className="ml-4 md:ml-8">
-            <a
-              href={item.href}
-              target={item.openInNewTab ? "_blank" : "_self"}
-              className={cn(
-                "hover:text-gray-900",
-                pathname === item.href && "font-semibold"
-              )}
+    <header className="w-full bg-white/80 dark:bg-[#1e3a8a]/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-sm">
+      <nav className="w-full border-b border-gray-100 dark:border-blue-900">
+        <div className="w-full flex items-center justify-between px-4 md:px-8 py-4">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/growthSVG.png"
+              alt="Growth BDM Logo"
+              width={75}
+              height={37}
+              className="h-9 w-auto block dark:hidden"
+            />
+            <Image
+              src="/Logo_white.png"
+              alt="Growth BDM Logo"
+              width={75}
+              height={37}
+              className="h-9 w-auto hidden dark:block"
+            />
+          </Link>
+          
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
             >
-              {item.name}
-            </a>
+              Publicación Growth
+            </Link>
+            <Link
+              href="/networking"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+            >
+              Networking
+            </Link>
+            <Link
+              href="/about"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+            >
+              About
+            </Link>
+            <Button
+              variant="default"
+              className="bg-blue-600 hover:bg-blue-700"
+              asChild
+            >
+              <Link href="/construye-alianzas">Construye Alianzas</Link>
+            </Button>
           </div>
-        ))}
-      </div>
-      <div className="md:hidden">
-        <Sheet>
-          <SheetTrigger>
-            <Menu size="24" />
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetDescription>
-                {menuItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    target={item.openInNewTab ? "_blank" : "_self"}
-                    className={cn(
-                      "block py-2",
-                      pathname === item.href && "font-semibold"
-                    )}
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </nav>
-  );
-};
+        </div>
 
-export const Header: FunctionComponent = () => {
-  return (
-    <section className="flex items-center justify-between mt-8 md:mt-16 mb-12">
-      <Link href="/">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight">
-          {config.blog.name}
-        </h1>
-      </Link>
-      <Navigation />
-    </section>
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <Link
+                href="/blog"
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+              >
+                Publicación Growth
+              </Link>
+              <Link
+                href="/networking"
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+              >
+                Networking
+              </Link>
+              <Link
+                href="/about"
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+              >
+                About
+              </Link>
+              <Button
+                variant="default"
+                className="w-full bg-blue-600 hover:bg-blue-700 mt-2"
+                asChild
+              >
+                <Link href="/construye-alianzas">Construye Alianzas</Link>
+              </Button>
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
   );
 };

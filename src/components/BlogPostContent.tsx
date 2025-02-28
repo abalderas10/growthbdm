@@ -1,81 +1,22 @@
-"use client";
-import { GetPostResult } from "@/lib/wisp";
-import Link from "next/link";
-import sanitize, { defaults } from "sanitize-html";
+import { Post } from "@wisp-cms/client";
+import Image from "next/image";
 
-export const PostContent = ({ content }: { content: string }) => {
-  const sanitizedContent = sanitize(content, {
-    allowedTags: [
-      "b",
-      "br",
-      "i",
-      "em",
-      "strong",
-      "a",
-      "img",
-      "h1",
-      "h2",
-      "h3",
-      "code",
-      "pre",
-      "p",
-      "li",
-      "ul",
-      "ol",
-      "blockquote",
-      // tables
-      "td",
-      "th",
-      "table",
-      "tr",
-      "tbody",
-      "thead",
-      "tfoot",
-      "small",
-      "div",
-      "iframe",
-    ],
-    allowedAttributes: {
-      ...defaults.allowedAttributes,
-      "*": ["style"],
-      iframe: ["src", "allowfullscreen", "style"],
-    },
-    allowedIframeHostnames: ["www.youtube.com", "www.youtube-nocookie.com"],
-  });
+export const BlogPostContent = ({ post }: { post: Post }) => {
   return (
-    <div
-      className="blog-content mx-auto"
-      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-    ></div>
-  );
-};
-
-export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
-  if (!post) return null;
-  const { title, publishedAt, createdAt, content, tags } = post;
-  return (
-    <div>
-      <div className="prose lg:prose-xl dark:prose-invert mx-auto lg:prose-h1:text-4xl mb-10 lg:mt-20 break-words">
-        <h1>{title}</h1>
-        <PostContent content={content} />
-
-        <div className="mt-10 opacity-40 text-sm">
-          {tags.map((tag) => (
-            <Link
-              key={tag.id}
-              href={`/tag/${tag.name}`}
-              className="text-primary mr-2"
-            >
-              #{tag.name}
-            </Link>
-          ))}
+    <article className="prose dark:prose-invert lg:prose-lg max-w-none">
+      {post.image && (
+        <div className="relative w-full h-[400px] mb-8">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover rounded-lg"
+            priority
+            sizes="100vw"
+          />
         </div>
-        <div className="text-sm opacity-40 mt-4">
-          {Intl.DateTimeFormat("en-US").format(
-            new Date(publishedAt || createdAt)
-          )}
-        </div>
-      </div>
-    </div>
+      )}
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </article>
   );
 };

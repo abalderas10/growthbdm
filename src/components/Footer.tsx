@@ -5,37 +5,27 @@ import Link from "next/link";
 import { FunctionComponent } from "react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "./ui/button";
+import { MinimalNewsletter } from './MinimalNewsletter';
 
 export const Footer: FunctionComponent = () => {
   return (
-    <section className="mt-8 md:mt-16 mb-12">
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          © {config.blog.copyright} {new Date().getFullYear()}
-        </div>
-        <div className="text-xs text-muted-foreground hidden lg:block">
-          <Link
-            href={`https://wisp.blog/?utm_source=next-js-template&utm_medium=web&utm_campaign=${config.baseUrl}`}
-          >
-            Blog powered by wisp
-          </Link>
-        </div>
-        <div>
-          <Link href="/rss">
-            <Button variant="ghost" className="p-2">
-              <Rss className="w-4 h-4" />
-            </Button>
-          </Link>
-          <DarkModeToggle />
+    <footer className="w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+      <div className="w-full py-8 px-4">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="text-sm text-gray-600 dark:text-gray-300">
+            Growth Business Development, 2025
+          </div>
+          <div className="flex items-center space-x-2">
+            <Link href="/rss">
+              <Button variant="ghost" className="p-2">
+                <Rss className="w-4 h-4" />
+              </Button>
+            </Link>
+            <DarkModeToggle />
+          </div>
+          <MinimalNewsletter />
         </div>
       </div>
-      <div className="text-xs text-muted-foreground lg:hidden">
-        <Link
-          href={`https://wisp.blog/?utm_source=next-js-template&utm_medium=web&utm_campaign=${config.baseUrl}`}
-        >
-          Blog powered by wisp
-        </Link>
-      </div>
-    </section>
+    </footer>
   );
 };
