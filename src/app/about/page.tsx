@@ -21,6 +21,27 @@ const staggerChildren = {
   }
 };
 
+const TeamProfile = ({ name, role, company, location, description, followers, connections, imageUrl, bannerUrl, linkedinUrl, education }) => {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+      <div className="mb-4 relative">
+        <Image src={bannerUrl} alt={name} layout="fill" objectFit="cover" className="rounded-t-2xl" />
+        <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-center">
+          <Image src={imageUrl} alt={name} width={100} height={100} className="rounded-full" />
+        </div>
+      </div>
+      <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{name}</h3>
+      <p className="text-gray-600 dark:text-gray-300">{role} en {company}</p>
+      <p className="text-gray-600 dark:text-gray-300">{location}</p>
+      <p className="text-gray-600 dark:text-gray-300">{description}</p>
+      <p className="text-gray-600 dark:text-gray-300">{followers} seguidores en LinkedIn</p>
+      <p className="text-gray-600 dark:text-gray-300">{connections} conexiones en LinkedIn</p>
+      {education && <p className="text-gray-600 dark:text-gray-300">{education}</p>}
+      <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 transition-colors duration-200">Ver perfil en LinkedIn</a>
+    </div>
+  );
+};
+
 const Page = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -101,6 +122,67 @@ const Page = () => {
               </p>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="relative py-40 bg-gray-50 dark:bg-gray-900">
+        {/* Banner de fondo */}
+        <div className="absolute inset-0 h-[600px] overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/banner-equipo.jpg')] bg-cover bg-center opacity-10 dark:opacity-5"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-50/80 to-gray-50 dark:from-gray-900/80 dark:to-gray-900"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerChildren}
+            className="max-w-6xl mx-auto"
+          >
+            <motion.div
+              variants={fadeInUp}
+              className="text-center mb-32"
+            >
+              <h2 className="text-5xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-gray-900 dark:from-blue-400 dark:to-gray-300">
+                Nuestro Equipo Directivo
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                Liderando el camino hacia el éxito y la innovación en el desarrollo de negocios
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={fadeInUp}
+              className="grid gap-16 md:grid-cols-2 pt-8"
+            >
+              <TeamProfile
+                name="Luis Méndez Trillo"
+                role="Presidente"
+                company="Coldwell Banker Commercial Mexico"
+                location="Ciudad de México y alrededores, México"
+                description="Presidente en Coldwell Banker Commercial Mexico desde septiembre 2011, liderando la expansión y el desarrollo estratégico de la compañía por más de 13 años."
+                followers={500}
+                connections={500}
+                imageUrl="/1637191759604.jpg"
+                bannerUrl="/1614275499710.jpg"
+                linkedinUrl="https://www.linkedin.com/in/luis-mendez-trillo/"
+              />
+              <TeamProfile
+                name="Adriana Vargas Olvera"
+                role="Partner & Principal Chief Executive Officer"
+                company="Aliest - Growth"
+                location="Ciudad de México, México"
+                description="Partner & Principal Chief Executive Officer en Aliest - Growth, liderando iniciativas estratégicas y el crecimiento de la empresa desde agosto 2024."
+                followers={16311}
+                connections={500}
+                imageUrl="/1602816840383.jpg"
+                bannerUrl="/1732761478686.jpg"
+                linkedinUrl="https://www.linkedin.com/in/adrianavargasolvera/"
+                education="Universidad Anáhuac Mexico Norte"
+              />
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
