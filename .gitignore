@@ -25,6 +25,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# local env files
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+
 # vercel
 .vercel
 
@@ -32,7 +39,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# NOTA: Temporalmente permitimos el archivo .env durante el desarrollo
-# TODO: Antes de producción, agregar nuevamente:
-# .env*.local
-# .env
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

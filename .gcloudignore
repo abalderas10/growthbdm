@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules/
+npm-debug.log
+README.md
+.next/
+.env
+.env.*
+*.log
+test/
+__tests__/
+coverage/
+.vscode/
+.idea/
+*.md
+*.test.*
+*.spec.*

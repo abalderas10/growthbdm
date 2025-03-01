@@ -1,89 +1,162 @@
-# A Next.js 15 Blog using Server Components - Backed by Wisp CMS<!-- omit in toc -->
+# Growth BDM Platform
 
-[![Demo Travel Blog on Next.js 15](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/32432ccf-57a8-4992-8c51-e5a47e110018.png/public "Demo Travel Blog on Next.js 15")](https://nextjs-blog-cms-wisp.vercel.app/)
+Dashboard de administración y gestión de negocios para Growth Business Development Management.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FWisp-CMS%2Fnextjs-blog-cms-wisp&env=NEXT_PUBLIC_BLOG_ID&envDescription=Blog%20ID%20obtained%20from%20the%20Setup%20Page%20on%20Wisp%20CMS&demo-title=Demo%20Travel%20Blog&demo-description=Demo%20travel%20blog%20using%20Nextjs%2015%20Server%20Component&demo-url=https%3A%2F%2Fnextjs-blog-cms-wisp.vercel.app%2F&demo-image=https%3A%2F%2Fimagedelivery.net%2FlLmNeOP7HXG0OqaG97wimw%2Fclvlugru90000o4g8ahxp069s%2F32432ccf-57a8-4992-8c51-e5a47e110018.png%2Fpublic)
+## 🚀 Características
 
-**Featured Links**
+- 🔐 Autenticación segura con Google OAuth
+- 📊 Dashboard administrativo
+- 📅 Integración con Google Calendar
+- 📧 Sistema de contacto y formularios
+- 🌓 Tema claro/oscuro
+- 📱 Diseño responsive
+- 🔒 Rutas protegidas
+- 🎨 UI moderna con Tailwind CSS
 
-- [Demo Blog](https://blog-demo.wisp.blog/)
-- [Feature Walkthrough](https://youtu.be/7wVYAGhDmdY)
-- [Editing Experience](https://youtu.be/uSKO8J38T98)
-- [Documentation](https://www.wisp.blog/docs/next-js-blog-starter-kit/overview)
-- [Video Tutorial](https://www.wisp.blog/docs/next-js-blog-starter-kit/running-blog)
+## 🛠️ Stack Tecnológico
 
-This is a [Next.js](https://nextjs.org/docs/getting-started/installation), [Tailwind CSS](https://tailwindcss.com/), [Shadcn](https://ui.shadcn.com/) blogging starter template. This version is using Next.js 15 App Router with [React Server Components](https://nextjs.org/docs/getting-started/react-essentials#server-components) and uses [Wisp](https://wisp.blog/?utm_source=github&utm_medium=web&utm_campaign=nextjs-blog-cms-wisp) for publishing blog posts.
+- **Framework**: [Next.js 13+](https://nextjs.org/)
+- **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
+- **Autenticación**: [NextAuth.js](https://next-auth.js.org/)
+- **Base de Datos**: [Supabase](https://supabase.io/)
+- **Estilos**: [Tailwind CSS](https://tailwindcss.com/)
+- **Hosting**: [Google Cloud Platform (App Engine)](https://cloud.google.com/)
 
-Probably the most feature-rich Next.js blog template out there that is easily configurable and customizable. It's perfect as an upgrade from blogs using Jekyll, Hugo, Gatsby, Contentlayer, or ContentCollections.
+## 📋 Requisitos Previos
 
-## About Wisp
+- Node.js 18.x o superior
+- npm o yarn
+- Cuenta de Google Cloud Platform
+- Cuenta de Supabase
+- Dominio verificado (para producción)
 
-Wisp is a modern CMS for adding blogs to websites. It features an intuitive, medium-like editorial experience so that you can focus on writing instead of getting distracted by markdown.
+## 🚀 Configuración Local
 
-## Features
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/abalderas10/growthbdm.git
+   cd growthbdm
+   ```
 
-- Beautiful blog starter kit with server rendering using Next.js 15 Server Components
-- Responsive layout for mobile devices
-- Filter blog posts by tags
-- About page
-- Light & dark mode
-- Automatic hierarchical sitemap generation
-- Automatic Open Graph image generation
-- Automatic [Related Posts suggestions](https://www.wisp.blog/blog/suggesting-related-blog-post-with-ai-content-recommendation)
-- RSS Feed
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   # o
+   yarn install
+   ```
 
-## Technologies
+3. **Configurar variables de entorno**
+   - Crear archivo `.env` (ver sección de Variables de Entorno)
 
-- [Next.js 15](https://nextjs.org/) using App Router & TypeScript
-- [Wisp](https://wisp.blog/?utm_source=github&utm_medium=web&utm_campaign=nextjs-blog-cms-wisp) to manage blog posts
-- [Tailwind CSS](https://tailwindcss.com/) for CSS framework
-- [Shadcn UI](https://ui.shadcn.com/) for UI components
-- [ESLint](https://eslint.org/) for static analysis
-- [TypeScript](https://www.typescriptlang.org/) for type safety
-- Font optimization with [next/font](https://nextjs.org/docs/app/api-reference/components/font)
+4. **Iniciar servidor de desarrollo**
+   ```bash
+   npm run dev
+   # o
+   yarn dev
+   ```
 
-## Step-by-step Video Tutorial
+## 🔑 Variables de Entorno
 
-We've now included a 3-part video tutorial to help you run this blog on your computer:
+Crear un archivo `.env` con las siguientes variables:
 
-![3-part Video Tutorial to Launch Nextjs Blog](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/cluqyx1rl0000l5ds3f0vkfer/2a92b7b6-9b11-4e41-8719-bad7be99b912.png/public "3-part Video Tutorial to Launch Nextjs Blog")
+```env
+# URLs y Configuración Base
+NEXT_PUBLIC_BASE_URL="http://localhost:3022"
+NEXTAUTH_URL="http://localhost:3022"
+NEXTAUTH_SECRET="un-string-aleatorio-muy-largo-y-seguro"
 
-- [Part 1: Running the Next JS blog (15 min)](https://www.wisp.blog/docs/next-js-blog-starter-kit/running-blog?utm_source=github&utm_medium=web&utm_campaign=nextjs-blog-cms-wisp)
-- [Part 2: Personalizing Your Next.js Blog (15 min)](https://www.wisp.blog/docs/next-js-blog-starter-kit/personalizing-blog?utm_source=github&utm_medium=web&utm_campaign=nextjs-blog-cms-wisp)
-- [Part 3: Deploying Your Next.js Blog (15 min)](https://www.wisp.blog/docs/next-js-blog-starter-kit/deploying-blog?utm_source=github&utm_medium=web&utm_campaign=nextjs-blog-cms-wisp)
+# Google OAuth
+GOOGLE_CLIENT_ID="tu-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="tu-client-secret"
 
-## Quick Start Guide
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL="tu-supabase-url"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="tu-supabase-anon-key"
 
-First, install the dependencies:
+# Blog (opcional)
+NEXT_PUBLIC_BLOG_ID="tu-blog-id"
+NEXT_PUBLIC_BLOG_DISPLAY_NAME="Growth Blog"
+NEXT_PUBLIC_BLOG_COPYRIGHT="Growth Business Development"
+NEXT_DEFAULT_METADATA_DEFAULT_TITLE="Business Development"
+NEXT_PUBLIC_BLOG_DESCRIPTION="Desarrollo de Negocios Inmobiliarios"
 
-```bash
-npm i --legacy-peer-deps
+# Stripe (opcional)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="tu-stripe-publishable-key"
+STRIPE_SECRET_KEY="tu-stripe-secret-key"
+
+# Cloudinary (opcional)
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="tu-cloud-name"
+CLOUDINARY_API_KEY="tu-api-key"
+CLOUDINARY_API_SECRET="tu-api-secret"
 ```
 
-**IMPORTANT**: There's a dependency (next-themes) that's not upgraded to React 19 so you will need to add the `--legacy-peer-deps` into the install command. Make sure that Vercel's install command is set to use `npm i --legacy-peer-deps` too!
+## 🌐 Despliegue en GCP
 
-Then, copy the `.env.example` file to `.env`:
+### 1. Configuración Inicial en GCP
 
-```bash
-cp .env.example .env
-```
+1. Crear nuevo proyecto en GCP
+2. Habilitar APIs necesarias:
+   - App Engine Admin API
+   - Cloud Build API
+   - Identity and Access Management (IAM) API
 
-Note: You will need to populate the `NEXT_PUBLIC_BLOG_ID` variable with the Blog ID obtained from wisp after you've created an account.
+### 2. Configuración de Permisos
 
-Finally, run the development server:
+1. IAM & Admin > Service Accounts
+2. Crear o configurar cuenta de servicio
+3. Asignar roles:
+   - App Engine Admin
+   - Cloud Build Service Account
+   - Storage Admin
 
-```bash
-npm run dev
-```
+### 3. Configuración de App Engine
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Crear aplicación en App Engine
+2. Seleccionar región: us-central1
+3. Ambiente: Node.js standard
 
-## Getting Help
+### 4. Despliegue
 
-Full documentation on how to get started on wisp as well as this starter kit is available on [wisp's documentation site](https://www.wisp.blog/docs/next-js-blog-starter-kit/overview?utm_source=github&utm_medium=web&utm_campaign=nextjs-blog-cms-wisp)
+1. Configurar app.yaml:
+   ```yaml
+   runtime: nodejs20
+   env: standard
+   instance_class: F1
 
-## Other template
+   automatic_scaling:
+     target_cpu_utilization: 0.65
+     min_instances: 1
+     max_instances: 10
 
-Like this template?
+   env_variables:
+     # Agregar variables de entorno aquí
+   ```
 
-Check out our [corporate blog template here](https://github.com/Wisp-CMS/nextjs-corporate-blog-starter).
+2. Ejecutar despliegue:
+   ```bash
+   gcloud app deploy
+   ```
+
+## 🔒 Seguridad
+
+- Autenticación restringida a dominio @growthbdm.com
+- Todas las rutas del dashboard protegidas
+- Variables de entorno seguras
+- HTTPS forzado
+- Tokens JWT para sesiones
+
+## 📝 Desarrollo
+
+- Rama principal: `main`
+- Crear feature branches para nuevas funcionalidades
+- Seguir convenciones de commits de [Conventional Commits](https://www.conventionalcommits.org/)
+
+## 🤝 Soporte
+
+Para soporte técnico, contactar a:
+- **Email**: alberto.balderas@growthbdm.com
+- **Documentación**: [Wiki del proyecto](https://github.com/abalderas10/growthbdm/wiki)
+
+## 📄 Licencia
+
+Copyright 2024 Growth Business Development Management

@@ -1,0 +1,26 @@
+runtime: nodejs20
+env: standard
+instance_class: F1
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 10
+  target_throughput_utilization: 0.6
+
+env_variables:
+  NEXTAUTH_URL: "https://growthbdm.com"
+  GOOGLE_ID: "GOOGLE_ID_AQUI"
+  GOOGLE_SECRET: "GOOGLE_SECRET_AQUI"
+  NEXTAUTH_SECRET: "NEXTAUTH_SECRET_AQUI"
+  GOOGLE_CALENDAR_CLIENT_ID: "GOOGLE_CALENDAR_CLIENT_ID_AQUI"
+  GOOGLE_CALENDAR_CLIENT_SECRET: "GOOGLE_CALENDAR_CLIENT_SECRET_AQUI"
+  GOOGLE_CALENDAR_REDIRECT_URI: "https://growthbdm.com/api/calendar/callback"
+
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+
+build_env_variables:
+  NEXT_TELEMETRY_DISABLED: "1"
