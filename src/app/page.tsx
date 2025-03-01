@@ -9,11 +9,10 @@ import ArrowRight from '@/components/icons/ArrowRight';
 import AliestGrowth from "@/components/AliestGrowth";
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { FloatingContactModal } from "@/components/FloatingContactModal";
+import SimpleMeetingScheduler from '@/components/Calendar/SimpleMeetingScheduler';
 
 const Page = () => {
   const [activeSection, setActiveSection] = useState(0);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,13 +82,7 @@ const Page = () => {
                     <footer className="mt-2 text-sm text-gray-600 dark:text-gray-400">- Adriana Vargas</footer>
                   </blockquote>
                   <div className="pt-4">
-                    <button 
-                      onClick={() => setIsContactModalOpen(true)}
-                      className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Agenda una Reunión
-                      <ArrowRight className="w-5 h-5" />
-                    </button>
+                    <SimpleMeetingScheduler />
                   </div>
                 </div>
               </div>
@@ -165,13 +158,7 @@ const Page = () => {
               </div>
             </div>
             <div className="mt-8 text-center">
-              <button
-                onClick={() => setIsContactModalOpen(true)}
-                className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full hover:bg-gray-100 transition-colors text-lg font-medium"
-              >
-                ¡Agenda una Reunión!
-                <ArrowRight className="w-5 h-5" />
-              </button>
+              <SimpleMeetingScheduler />
             </div>
           </div>
         </section>
@@ -184,12 +171,6 @@ const Page = () => {
           </div>
         </section>
       </main>
-      <FloatingContactModal 
-        isOpen={isContactModalOpen}
-        onClose={() => setIsContactModalOpen(false)}
-        title="Agenda una Reunión"
-        subtitle="Déjanos tus datos y nos pondremos en contacto contigo"
-      />
       <Footer />
     </div>
   );

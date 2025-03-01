@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAuthUrl } from '@/lib/google-auth';
+import { useGoogleAuth } from '@/lib/client/auth/google';
 import { supabase } from '@/lib/supabase';
+import { ContactForm } from '@/components/ContactForm';
 
-export default function SetupPage() {
+export default function MeetingSetupPage() {
   const [isConfigured, setIsConfigured] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { session, status, initiateGoogleAuth } = useGoogleAuth();
 
   useEffect(() => {
     checkConfiguration();
@@ -29,16 +31,29 @@ export default function SetupPage() {
 
   async function handleConnect() {
     try {
-      const authUrl = getAuthUrl();
-      window.location.href = authUrl;
+      await initiateGoogleAuth();
     } catch (error) {
-      console.error('Error initiating Google auth:', error);
-      alert('Error al conectar con Google Calendar');
+      console.error('Error connecting to Google Calendar:', error);
     }
   }
 
-  if (loading) {
+  if (loading || status === 'loading') {
     return <div>Cargando...</div>;
+  }
+
+  if (!session) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <h1 className="text-4xl font-bold mb-8">Configuración de Calendario</h1>
+        <p className="mb-4">Para agendar reuniones, necesitas conectar tu cuenta de Google Calendar.</p>
+        <button
+          onClick={() => initiateGoogleAuth()}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Conectar Google Calendar
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -94,6 +109,10 @@ export default function SetupPage() {
             </div>
           )}
         </div>
+      </div>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8">Agenda una Reunión</h1>
+        <ContactForm />
       </div>
     </div>
   );

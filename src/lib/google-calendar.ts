@@ -1,13 +1,38 @@
-import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
+'use server';
 
-const oauth2Client = new OAuth2Client(
-  process.env.GOOGLE_CALENDAR_CLIENT_ID,
-  process.env.GOOGLE_CALENDAR_CLIENT_SECRET,
-  process.env.GOOGLE_CALENDAR_REDIRECT_URI
-);
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 
-export const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+export async function getCalendarToken() {
+  const session = await getServerSession(authOptions);
+  if (!session) return null;
+  
+  // @ts-ignore - el token de acceso está en el token de sesión
+  return session.accessToken;
+}
+
+export async function listCalendarEvents() {
+  const token = await getCalendarToken();
+  if (!token) return null;
+
+  try {
+    const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error fetching calendar events');
+    }
+
+    const data = await response.json();
+    return data.items;
+  } catch (error) {
+    console.error('Error fetching calendar events:', error);
+    return null;
+  }
+}
 
 export async function createCalendarEvent({
   summary,
@@ -22,28 +47,40 @@ export async function createCalendarEvent({
   endDateTime: string;
   attendeeEmail: string;
 }) {
+  const token = await getCalendarToken();
+  if (!token) throw new Error('No token available');
+
   try {
-    const event = await calendar.events.insert({
-      calendarId: 'primary',
-      requestBody: {
+    const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         summary,
         description,
         start: {
           dateTime: startDateTime,
-          timeZone: 'America/Mexico_City',
         },
         end: {
           dateTime: endDateTime,
-          timeZone: 'America/Mexico_City',
         },
-        attendees: [{ email: attendeeEmail }],
+        attendees: [
+          { email: attendeeEmail },
+        ],
         reminders: {
           useDefault: true,
         },
-      },
+      }),
     });
 
-    return event.data;
+    if (!response.ok) {
+      throw new Error('Error creating calendar event');
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Error creating calendar event:', error);
     throw error;
@@ -51,16 +88,29 @@ export async function createCalendarEvent({
 }
 
 export async function getAvailability(startDate: Date, endDate: Date) {
+  const token = await getCalendarToken();
+  if (!token) throw new Error('No token available');
+
   try {
-    const response = await calendar.freebusy.query({
-      requestBody: {
+    const response = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         timeMin: startDate.toISOString(),
         timeMax: endDate.toISOString(),
         items: [{ id: 'primary' }],
-      },
+      }),
     });
 
-    return response.data.calendars?.primary.busy || [];
+    if (!response.ok) {
+      throw new Error('Error getting availability');
+    }
+
+    const data = await response.json();
+    return data.calendars?.primary.busy || [];
   } catch (error) {
     console.error('Error getting availability:', error);
     throw error;
@@ -68,11 +118,20 @@ export async function getAvailability(startDate: Date, endDate: Date) {
 }
 
 export async function deleteCalendarEvent(eventId: string) {
+  const token = await getCalendarToken();
+  if (!token) throw new Error('No token available');
+
   try {
-    await calendar.events.delete({
-      calendarId: 'primary',
-      eventId,
+    const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+
+    if (!response.ok) {
+      throw new Error('Error deleting calendar event');
+    }
   } catch (error) {
     console.error('Error deleting calendar event:', error);
     throw error;

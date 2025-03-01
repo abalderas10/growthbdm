@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/toaster";
 import { Providers } from "@/components/providers";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -29,9 +29,9 @@ export const metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="es" suppressHydrationWarning>
       <head />
@@ -39,7 +39,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
-          <Toaster richColors position="top-right" />
+          <Toaster />
         </Providers>
       </body>
     </html>

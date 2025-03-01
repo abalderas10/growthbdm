@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from "next/image";
-import { SimpleMeetingScheduler } from "./Calendar/SimpleMeetingScheduler";
+import SimpleMeetingScheduler from "./Calendar/SimpleMeetingScheduler";
 
 export default function AliestGrowth() {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,124 +1,128 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
+import { z } from 'zod';
 
 const contactSchema = z.object({
-  name: z.string().min(2, "El nombre es muy corto"),
-  email: z.string().email("Email inválido"),
-  message: z.string().min(10, "El mensaje es muy corto"),
+  name: z.string().min(1, 'El nombre es requerido'),
+  email: z.string().email('Email inválido'),
   company: z.string().optional(),
+  message: z.string().optional(),
 });
 
-type ContactForm = z.infer<typeof contactSchema>;
+type ContactFormData = z.infer<typeof contactSchema>;
 
-export function ContactForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<ContactForm>({
-    resolver: zodResolver(contactSchema),
+interface ContactFormProps {
+  onSubmit: (data: ContactFormData) => Promise<void>;
+}
+
+export function ContactForm({ onSubmit }: ContactFormProps) {
+  const [formData, setFormData] = useState<ContactFormData>({
+    name: '',
+    email: '',
+    company: '',
+    message: '',
   });
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const onSubmit = async (data: ContactForm) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
     try {
-      // Insertar en Supabase
-      const { error: supabaseError } = await supabase
-        .from('contact_forms')
-        .insert([data]);
-
-      if (supabaseError) throw supabaseError;
-
-      // Enviar notificación por email (opcional)
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const validatedData = contactSchema.parse(formData);
+      await onSubmit(validatedData);
       
-      reset();
-      toast.success("Mensaje enviado correctamente");
+      // Limpiar el formulario solo si la submission fue exitosa
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        message: '',
+      });
     } catch (error) {
-      console.error('Error al enviar el formulario:', error);
-      toast.error("Error al enviar el mensaje. Por favor, intenta de nuevo.");
+      if (error instanceof z.ZodError) {
+        toast({
+          title: 'Error de validación',
+          description: error.errors[0].message,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: error instanceof Error ? error.message : 'Error al enviar el formulario',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-          Nombre
-        </label>
-        <input
-          {...register("name")}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          placeholder="Tu nombre"
-        />
-        {errors.name && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-            {errors.name.message}
-          </p>
-        )}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Nombre</Label>
+          <Input
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-          Email
-        </label>
-        <input
-          type="email"
-          {...register("email")}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          placeholder="tu@email.com"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-          Empresa (opcional)
-        </label>
-        <input
-          {...register("company")}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          placeholder="Nombre de tu empresa"
+      <div className="space-y-2">
+        <Label htmlFor="company">Empresa</Label>
+        <Input
+          id="company"
+          name="company"
+          value={formData.company}
+          onChange={handleChange}
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-          Mensaje
-        </label>
-        <textarea
-          {...register("message")}
+      <div className="space-y-2">
+        <Label htmlFor="message">Mensaje (opcional)</Label>
+        <Textarea
+          id="message"
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
           rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          placeholder="¿En qué podemos ayudarte?"
         />
-        {errors.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-            {errors.message.message}
-          </p>
-        )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isSubmitting ? "Enviando..." : "Enviar mensaje"}
-      </button>
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? 'Enviando...' : 'Enviar'}
+      </Button>
     </form>
   );
 }

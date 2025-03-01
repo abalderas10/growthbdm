@@ -18,30 +18,31 @@ export const Hero: FunctionComponent = () => {
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white leading-tight">
-            Growth Business{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-gray-900">
-              Development
-            </span>
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-blue-600 dark:from-white dark:to-blue-500">
+            Potencia tu Crecimiento con Growth BDM
           </h1>
-          
-          <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mx-auto leading-relaxed max-w-3xl">
-            Impulsamos el crecimiento de tu negocio a través de estrategias innovadoras y soluciones tecnológicas de vanguardia.
+          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12">
+            Desarrollamos estrategias personalizadas para impulsar el crecimiento de tu negocio a través de alianzas estratégicas y networking efectivo.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
             <Link
-              href="/contact"
-              className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-600 to-gray-900 hover:opacity-90 transition-opacity"
+              href="/construye-alianzas"
+              className="inline-flex items-center px-8 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Comienza Ahora
+              Comienza ahora
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
             </Link>
             <Link
-              href="/services"
-              className="inline-flex items-center px-8 py-4 border-2 border-gray-300 dark:border-gray-700 text-lg font-medium rounded-full text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200"
+              href="/networking"
+              className="inline-flex items-center px-8 py-3 text-lg font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Explorar Servicios
+              Networking
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </Link>
           </div>
         </div>

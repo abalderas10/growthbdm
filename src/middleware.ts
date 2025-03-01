@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 
+const authMiddleware = withAuth({
+  callbacks: {
+    authorized: ({ token }) => {
+      return token?.email?.endsWith("@growthbdm.com") ?? false;
+    },
+  },
+});
+
 export default async function middleware(req: NextRequestWithAuth) {
   const token = await getToken({ req });
   const isAuth = !!token;
@@ -34,8 +42,20 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.redirect(new URL('/dashboard/error', req.url));
     }
   }
+
+  return authMiddleware(req);
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*']
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api/auth (auth endpoints)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|public).*)",
+  ],
 };

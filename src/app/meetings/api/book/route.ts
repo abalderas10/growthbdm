@@ -1,60 +1,84 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { createCalendarEvent } from '@/lib/google-calendar';
+import { createCalendarEvent } from '@/lib/server/calendar/google';
+import { z } from 'zod';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
+
+// Schema de validación
+const bookingSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  startTime: z.string(),
+  endTime: z.string(),
+  attendeeEmail: z.string().email(),
+  attendeeName: z.string(),
+  meetingType: z.string()
+});
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { 
-      title,
-      description,
-      startTime,
-      endTime,
-      attendeeEmail,
-      attendeeName,
-      meetingTypeId
-    } = body;
+    // Verificar autenticación
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: 'No autorizado. Por favor inicia sesión.' },
+        { status: 401 }
+      );
+    }
 
+    // Verificar si es un usuario de Growth BDM
+    const isGrowthAdmin = session.user?.email?.endsWith('@growthbdm.com');
+    
+    const body = await request.json();
+    
+    // Validar los datos
+    const validatedData = bookingSchema.parse(body);
+    
     // Crear el evento en Google Calendar
     const calendarEvent = await createCalendarEvent({
-      summary: title,
-      description,
-      startDateTime: startTime,
-      endDateTime: endTime,
-      attendeeEmail
+      summary: validatedData.title,
+      description: `
+Reunión con: ${validatedData.attendeeName}
+Tipo: ${validatedData.meetingType}
+
+${validatedData.description}
+
+${isGrowthAdmin ? '(Confirmada por administrador)' : '(Pendiente de confirmación)'}
+      `.trim(),
+      startDateTime: validatedData.startTime,
+      endDateTime: validatedData.endTime,
+      attendeeEmail: validatedData.attendeeEmail,
+      status: isGrowthAdmin ? 'confirmed' : 'tentative'
     });
-
-    // Guardar la reunión en Supabase
-    const { data, error } = await supabase
-      .from('meetings')
-      .insert({
-        title,
-        description,
-        start_time: startTime,
-        end_time: endTime,
-        attendee_email: attendeeEmail,
-        attendee_name: attendeeName,
-        meeting_type_id: meetingTypeId,
-        google_event_id: calendarEvent.id,
-        status: 'confirmed'
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
 
     return NextResponse.json({ 
       success: true, 
       data: {
-        meeting: data,
-        calendarEvent
+        calendarEvent,
+        isConfirmed: isGrowthAdmin
       }
     });
+
   } catch (error) {
-    console.error('Error booking meeting:', error);
-    return NextResponse.json(
-      { success: false, error: 'Error al agendar la reunión' },
-      { status: 500 }
-    );
+    console.error('Error al agendar la reunión:', error);
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Datos inválidos en el formulario' 
+      }, { status: 400 });
+    }
+
+    if (error instanceof Error && error.message === 'No token available') {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Error de autenticación. Por favor, inicia sesión nuevamente.' 
+      }, { status: 401 });
+    }
+
+    return NextResponse.json({ 
+      success: false, 
+      error: 'Error al agendar la reunión. Por favor intenta nuevamente.' 
+    }, { status: 500 });
   }
 }
