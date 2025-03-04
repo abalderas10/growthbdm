@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from 'lucide-react';
 import { Button } from "./ui/button";
+import { DarkModeToggle } from "./DarkModeToggle";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,18 +16,20 @@ export const Header = () => {
         <div className="w-full flex items-center justify-between px-4 md:px-8 py-4">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/growthSVG.png"
+              src="/images/logos/growthbdm.svg"
               alt="Growth BDM Logo"
               width={75}
               height={37}
               className="h-9 w-auto block dark:hidden"
+              priority
             />
             <Image
-              src="/Logo_white.png"
+              src="/images/logos/w_growthbdm.svg"
               alt="Growth BDM Logo"
               width={75}
               height={37}
               className="h-9 w-auto hidden dark:block"
+              priority
             />
           </Link>
           
@@ -62,6 +65,7 @@ export const Header = () => {
             >
               About
             </Link>
+            <DarkModeToggle />
             <Button
               variant="default"
               className="bg-blue-600 hover:bg-blue-700"
@@ -94,6 +98,9 @@ export const Header = () => {
               >
                 About
               </Link>
+              <div className="px-3 py-2">
+                <DarkModeToggle />
+              </div>
               <Button
                 variant="default"
                 className="w-full bg-blue-600 hover:bg-blue-700 mt-2"
