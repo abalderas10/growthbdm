@@ -3,13 +3,13 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { Calendar, MapPin, Clock } from 'lucide-react';
 import { CldImage } from 'next-cloudinary';
 import Link from 'next/link';
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import { useState, useEffect } from 'react';
 import ReservationForm from '@/components/Reservation/ReservationForm';
+import Image from 'next/image';
 
 interface StripeProduct {
   id: string;
@@ -24,8 +24,6 @@ interface StripeProduct {
 }
 
 export default function Networking() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
   const [product, setProduct] = useState<StripeProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -134,10 +132,12 @@ export default function Networking() {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-12">
                 {product.images?.[0] && (
                   <div className="relative w-full aspect-video mb-8">
-                    <img
+                    <Image
                       src={product.images[0]}
                       alt={product.name}
-                      className="w-full h-full object-cover rounded-lg"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-lg"
                     />
                   </div>
                 )}
@@ -197,27 +197,18 @@ export default function Networking() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
               Galería de Eventos Anteriores
             </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
-            {galleryImages.map((image) => (
-              <div
-                key={image.id}
-                className="relative group aspect-[4/3] overflow-hidden"
-              >
-                <CldImage
-                  src={image.src}
-                  alt={image.title}
-                  width={800}
-                  height={600}
-                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-center justify-center">
-                  <p className="text-white text-xl font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4">
-                    {image.title}
-                  </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {galleryImages.map((image) => (
+                <div key={image.id} className="relative aspect-square">
+                  <CldImage
+                    src={image.src}
+                    alt={image.title}
+                    fill
+                    className="object-cover rounded-lg cursor-pointer transition-transform hover:scale-105"
+                  />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </main>
