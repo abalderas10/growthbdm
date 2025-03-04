@@ -10,12 +10,14 @@ automatic_scaling:
 
 env_variables:
   NEXTAUTH_URL: "https://growthbdm.com"
-  GOOGLE_ID: "GOOGLE_ID_AQUI"
-  GOOGLE_SECRET: "GOOGLE_SECRET_AQUI"
-  NEXTAUTH_SECRET: "NEXTAUTH_SECRET_AQUI"
-  GOOGLE_CALENDAR_CLIENT_ID: "GOOGLE_CALENDAR_CLIENT_ID_AQUI"
-  GOOGLE_CALENDAR_CLIENT_SECRET: "GOOGLE_CALENDAR_CLIENT_SECRET_AQUI"
-  GOOGLE_CALENDAR_REDIRECT_URI: "https://growthbdm.com/api/calendar/callback"
+  GOOGLE_ID: "454219563663-mt8b4dlvkfd48uflie0njsjodhc01jgo.apps.googleusercontent.com"
+  GOOGLE_SECRET: "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"
+  NEXTAUTH_SECRET: "growth_bdm_scheduler_secret_key_2024"
+  NODE_ENV: "production"
+  DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/growthbdm?schema=public"
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: "de4dpzh9c"
+  CLOUDINARY_API_KEY: "624144452112574"
+  CLOUDINARY_API_SECRET: "Tw1jSlROHPsi82nVCjkLr9zcaAY"
 
 handlers:
   - url: /.*

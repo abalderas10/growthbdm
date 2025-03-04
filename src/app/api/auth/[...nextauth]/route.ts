@@ -9,6 +9,8 @@ export const authOptions = {
       authorization: {
         params: {
           prompt: "select_account",
+          access_type: "offline",
+          response_type: "code"
         }
       }
     }),
@@ -16,11 +18,22 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ account, profile }) {
-      if (account?.provider === "google") {
-        const email = profile?.email;
-        return email?.endsWith("@growthbdm.com") || 
-               email === "alberto.balderas@growthbdm.com" || 
-               email === "adriana.vargas@growthbdm.com";
+      if (!account || !profile) {
+        console.error("SignIn callback missing account or profile");
+        return false;
+      }
+
+      if (account.provider === "google") {
+        const email = profile.email;
+        const allowedEmails = [
+          "@growthbdm.com",
+          "alberto.balderas@growthbdm.com",
+          "adriana.vargas@growthbdm.com"
+        ];
+
+        return allowedEmails.some(allowed => 
+          email === allowed || (allowed.startsWith("@") && email?.endsWith(allowed))
+        );
       }
       return false;
     },
@@ -29,8 +42,8 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: '/dashboard/login',
-    error: '/dashboard/error',
+    signIn: '/auth/signin',
+    error: '/auth/error',
   },
   debug: process.env.NODE_ENV === 'development',
 };

@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from 'react';
 import Image from "next/image";
 import SimpleMeetingScheduler from "./Calendar/SimpleMeetingScheduler";
 
 export default function AliestGrowth() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <section className="bg-white">
       {/* Efectos de fondo */}
@@ -74,34 +71,10 @@ export default function AliestGrowth() {
 
           {/* Botón de llamada a la acción */}
           <div className="text-center">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-              Agenda una Reunión
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Modal de reunión */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsModalOpen(false);
-            }
-          }}
-        >
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full mx-4 shadow-2xl">
             <SimpleMeetingScheduler />
           </div>
         </div>
-      )}
+      </div>
     </section>
   );
 }

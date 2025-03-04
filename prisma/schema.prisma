@@ -7,14 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Para el formulario de contacto rápido
+// Para el formulario de contacto
 model Contact {
   id        String   @id @default(cuid())
   name      String
-  position  String
-  company   String
   email     String
-  project   String   @db.Text
+  company   String?
+  message   String   @db.Text
   status    String   @default("PENDING") // "PENDING", "CONTACTED", "COMPLETED"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,9 +25,8 @@ model Contact {
 model Meeting {
   id          String   @id @default(cuid())
   name        String
-  position    String
-  company     String
   email       String
+  company     String?
   meetingType String   // "DISCOVERY", "PROPOSAL", "FOLLOW_UP"
   meetingDate DateTime
   duration    Int      // duración en minutos
