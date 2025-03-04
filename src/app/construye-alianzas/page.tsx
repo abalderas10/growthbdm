@@ -12,13 +12,14 @@ import { motion, AnimatePresence } from "framer-motion"; // Corregido la importa
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const PRODUCTS = {
-  TICKET_TO_PLAY: 'price_1Q74ZnP1CcAYKMEzMXMTtOQf',
-  SUBSCRIPTION: 'price_1Q74ZnP1CcAYKMEzMXMTtOQf'
+  TICKET_TO_PLAY: 'price_1QyljqP1CcAYKMEzKHVCsimR',
+  SUBSCRIPTION: 'price_1QwDX6P1CcAYKMEzAHOPsdSD'
 };
 
 export default function ConstruyeAlianzas() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleCheckout = async (priceId: string) => {
     try {
@@ -87,7 +88,9 @@ export default function ConstruyeAlianzas() {
                   transition={{ duration: 0.5, delay: 0.6 }}
                   className="mt-10"
                 >
-                  <SimpleMeetingScheduler />
+                  {showCalendar ? (
+                    <SimpleMeetingScheduler />
+                  ) : null}
                 </motion.div>
               </div>
             </div>
