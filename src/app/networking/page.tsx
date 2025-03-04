@@ -21,6 +21,10 @@ interface StripeProduct {
     location: string;
     type: string;
   };
+  price: {
+    currency: string;
+    unit_amount: number;
+  };
 }
 
 export default function Networking() {
@@ -135,9 +139,9 @@ export default function Networking() {
                     <Image
                       src={product.images[0]}
                       alt={product.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-lg"
+                      fill
+                      className="rounded-lg object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 )}
@@ -147,12 +151,12 @@ export default function Networking() {
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">Fecha</h3>
                       <p className="text-gray-600 dark:text-gray-300">
-                        {new Date(product.metadata.event_date).toLocaleDateString('es-MX', {
+                        {product.metadata?.event_date ? new Date(product.metadata.event_date).toLocaleDateString('es-MX', {
                           weekday: 'long',
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
-                        })}
+                        }) : 'Fecha por confirmar'}
                       </p>
                     </div>
                   </div>
@@ -161,10 +165,10 @@ export default function Networking() {
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">Hora</h3>
                       <p className="text-gray-600 dark:text-gray-300">
-                        {new Date(product.metadata.event_date).toLocaleTimeString('es-MX', {
+                        {product.metadata?.event_date ? new Date(product.metadata.event_date).toLocaleTimeString('es-MX', {
                           hour: '2-digit',
                           minute: '2-digit',
-                        })}
+                        }) : 'Hora por confirmar'}
                       </p>
                     </div>
                   </div>
@@ -172,10 +176,20 @@ export default function Networking() {
                     <MapPin className="h-6 w-6 text-blue-500" />
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">Ubicación</h3>
-                      <p className="text-gray-600 dark:text-gray-300">{product.metadata.location}</p>
+                      <p className="text-gray-600 dark:text-gray-300">{product.metadata?.location || 'Ubicación por confirmar'}</p>
                     </div>
                   </div>
                 </div>
+                {product.price && (
+                  <div className="mt-8 text-center">
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {new Intl.NumberFormat('es-MX', {
+                        style: 'currency',
+                        currency: product.price.currency,
+                      }).format(product.price.unit_amount ? product.price.unit_amount / 100 : 0)}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

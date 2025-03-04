@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    domains: ['localhost', 'imagedelivery.net', 'images.unsplash.com', 'res.cloudinary.com'],
+    domains: ['localhost', 'imagedelivery.net', 'images.unsplash.com', 'res.cloudinary.com', 'files.stripe.com'],
   },
   experimental: {
     serverActions: {

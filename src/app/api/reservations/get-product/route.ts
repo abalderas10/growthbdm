@@ -10,10 +10,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 const PRODUCT_ID = 'prod_Rqxdf37ruTalZu';
+const PRICE_ID = 'price_1QxFi6P1CcAYKMEzLi6VCkP0';
 
 export async function GET() {
   try {
     console.log('Fetching product from Stripe...');
+    
+    // Obtener el producto
     const product = await stripe.products.retrieve(PRODUCT_ID);
     console.log('Product fetched:', JSON.stringify(product, null, 2));
     
@@ -21,15 +24,21 @@ export async function GET() {
       throw new Error('Product is not active');
     }
 
-    // Asegurarnos de que el producto tiene una imagen
-    if (!product.images || product.images.length === 0) {
-      console.warn('Product has no images');
-    } else {
-      console.log('Product image URL:', product.images[0]);
-    }
+    // Obtener el precio específico
+    const price = await stripe.prices.retrieve(PRICE_ID);
+
+    // Combinar la información del producto con el precio
+    const productWithPrice = {
+      ...product,
+      price: {
+        id: price.id,
+        unit_amount: price.unit_amount,
+        currency: price.currency
+      }
+    };
 
     return NextResponse.json({ 
-      product,
+      product: productWithPrice,
       timestamp: new Date().toISOString() 
     }, {
       headers: {
