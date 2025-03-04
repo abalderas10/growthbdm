@@ -9,6 +9,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
 });
 
+// Definir los IDs de productos y sus modos
+const PRODUCT_MODES = {
+  'price_1QwDX6P1CcAYKMEzAHOPsdSD': 'subscription',
+  'price_1QyljqP1CcAYKMEzKHVCsimR': 'payment'
+};
+
 export async function POST(request: Request) {
   try {
     console.log('Received request to create checkout session');
@@ -38,6 +44,9 @@ export async function POST(request: Request) {
 
     console.log('Creating checkout session with price:', priceId);
 
+    // Determinar el modo basado en el ID del precio
+    const mode = PRODUCT_MODES[priceId as keyof typeof PRODUCT_MODES] || 'payment';
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -46,7 +55,7 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      mode: 'subscription',
+      mode: mode as Stripe.Checkout.SessionCreateParams.Mode,
       success_url: 'https://growthbdm.vercel.app/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://growthbdm.vercel.app/construye-alianzas',
       billing_address_collection: 'required',
