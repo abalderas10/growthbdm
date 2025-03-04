@@ -12,8 +12,8 @@ import { motion, AnimatePresence } from "framer-motion"; // Corregido la importa
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const PRODUCTS = {
-  TICKET_TO_PLAY: 'price_premium',
-  SUBSCRIPTION: 'price_starter'
+  TICKET_TO_PLAY: 'price_1Q74ZnP1CcAYKMEzMXMTtOQf',
+  SUBSCRIPTION: 'price_1Q74ZnP1CcAYKMEzMXMTtOQf'
 };
 
 export default function ConstruyeAlianzas() {
