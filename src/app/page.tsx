@@ -10,6 +10,7 @@ import AliestGrowth from "@/components/AliestGrowth";
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import SimpleMeetingScheduler from '@/components/Calendar/SimpleMeetingScheduler';
+import { HorizontalBlogPosts } from "@/components/HorizontalBlogPosts";
 
 const Page = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -81,9 +82,6 @@ const Page = () => {
                     <p className="text-lg italic text-gray-700 dark:text-gray-300">"Vamos a crear estrategias en el sector el Inmobiliario."</p>
                     <footer className="mt-2 text-sm text-gray-600 dark:text-gray-400">- Adriana Vargas</footer>
                   </blockquote>
-                  <div className="pt-4">
-                    <SimpleMeetingScheduler />
-                  </div>
                 </div>
               </div>
             </div>
@@ -118,7 +116,7 @@ const Page = () => {
                     </p>
                     <div className="pt-4">
                       <Link 
-                        href="/services"
+                        href="/blog"
                         className="inline-flex items-center px-8 py-4 border-2 border-blue-400 text-lg font-medium rounded-full text-blue-400 hover:bg-blue-400/10 transition-colors duration-200"
                       >
                         Descubre Más
@@ -139,26 +137,30 @@ const Page = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
-                <h3 className="text-xl font-semibold text-white mb-3">Incrementa tus Oportunidades</h3>
-                <p className="text-gray-300">Multiplica tus oportunidades comerciales con leads de alto valor</p>
+
+            {/* Grid de características */}
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-16">
+                <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                  <h3 className="text-xl font-semibold text-white mb-3">Incrementa tus Oportunidades</h3>
+                  <p className="text-gray-300">Multiplica tus oportunidades comerciales con leads de alto valor</p>
+                </div>
+                <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                  <h3 className="text-xl font-semibold text-white mb-3">Posiciona Tu Marca</h3>
+                  <p className="text-gray-300">Fortalece tu presencia en eventos clave y medios especializados</p>
+                </div>
+                <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                  <h3 className="text-xl font-semibold text-white mb-3">Fortalece Relaciones</h3>
+                  <p className="text-gray-300">Conecta con desarrolladores y tomadores de decisiones clave</p>
+                </div>
+                <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
+                  <h3 className="text-xl font-semibold text-white mb-3">Ofrece Ingenierías de Valor</h3>
+                  <p className="text-gray-300">Aporta soluciones innovadoras y genera sinergias</p>
+                </div>
               </div>
-              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
-                <h3 className="text-xl font-semibold text-white mb-3">Posiciona Tu Marca</h3>
-                <p className="text-gray-300">Fortalece tu presencia en eventos clave y medios especializados</p>
-              </div>
-              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
-                <h3 className="text-xl font-semibold text-white mb-3">Fortalece Relaciones</h3>
-                <p className="text-gray-300">Conecta con desarrolladores y tomadores de decisiones clave</p>
-              </div>
-              <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
-                <h3 className="text-xl font-semibold text-white mb-3">Ofrece Ingenierías de Valor</h3>
-                <p className="text-gray-300">Aporta soluciones innovadoras y genera sinergias</p>
-              </div>
-            </div>
-            <div className="mt-8 text-center">
-              <SimpleMeetingScheduler />
+
+              {/* Blog Posts Carousel */}
+              <HorizontalBlogPosts />
             </div>
           </div>
         </section>
