@@ -1,7 +1,7 @@
 'use client';
 
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { motion } from "framer-motion";
