@@ -6,7 +6,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3022'],
+      allowedOrigins: ['localhost:3022', 'growthbdm.vercel.app', '*.vercel.app'],
     },
   },
 }
