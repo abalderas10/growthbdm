@@ -1,13 +1,13 @@
 'use client';
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { config } from "@/config";
-import { signOgImageUrl } from "@/lib/og-image";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { config } from "../../config";
+import { signOgImageUrl } from "../../lib/og-image";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
-import { TeamProfile } from "@/components/TeamProfile";
+import { TeamProfile } from "../../components/TeamProfile";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
