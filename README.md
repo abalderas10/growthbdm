@@ -1,6 +1,6 @@
-# Growth BDM Platform
+# Growth BDM
 
-Dashboard de administración y gestión de negocios para Growth Business Development Management.
+Desarrollo de Negocios Inmobiliarios - Última actualización: 2025-03-07
 
 ## 🚀 Características
 
@@ -226,4 +226,3 @@ git add .
 git commit -m "<Brief_Message>"
 git push
 ```
-
