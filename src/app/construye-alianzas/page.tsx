@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import SimpleMeetingScheduler from '@/components/Calendar/SimpleMeetingScheduler';
-import { PriceCard } from '@/components/ui/price-card';
-import { Button } from '@/components/ui/button';
-import { motion, AnimatePresence } from "framer-motion"; // Corregido la importación de framer-motion
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { SimpleMeetingScheduler } from "../../components/Calendar/SimpleMeetingScheduler";
+import { PriceCard } from "../../components/ui/price-card";
+import { Button } from "../../components/ui/button";
+import { motion, AnimatePresence } from "framer-motion"; 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
