@@ -1,12 +1,6 @@
-import { config } from "@/config";
-import {
-  buildWispClient,
-  GetPostsResult,
-  GetPostResult,
-} from "@wisp-cms/client";
+import { buildWispClient } from "@wisp-cms/client";
 
 export const wisp = buildWispClient({
-  blogId: config.wisp.blogId,
+  projectId: process.env.NEXT_PUBLIC_WISP_PROJECT_ID || "",
+  apiKey: process.env.NEXT_PUBLIC_WISP_API_KEY || "",
 });
-
-export type { GetPostsResult, GetPostResult };
