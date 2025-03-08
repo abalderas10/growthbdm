@@ -1,12 +1,13 @@
 'use client';
 
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
+import { TeamProfile } from "@/components/TeamProfile";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -43,115 +44,6 @@ const cardVariants = {
       damping: 10
     }
   }
-};
-
-const TeamProfile = ({ name, role, company, location, description, followers, connections, imageUrl, bannerUrl, linkedinUrl, education }) => {
-  return (
-    <motion.div 
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
-      className="relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300"
-    >
-      {/* Banner con gradiente y efecto de parallax */}
-      <motion.div 
-        className="h-32 relative overflow-hidden"
-        whileHover={{ scale: 1.05 }}
-        transition={{ duration: 0.4 }}
-      >
-        <Image 
-          src={bannerUrl} 
-          alt={`${name} banner`} 
-          width={500}
-          height={128}
-          className="object-cover w-full"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 dark:to-black/50"></div>
-      </motion.div>
-
-      {/* Foto de perfil con borde y efecto de elevación */}
-      <div className="relative -mt-16 flex justify-center">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="relative rounded-full border-4 border-white dark:border-gray-800 shadow-xl"
-        >
-          <Image 
-            src={imageUrl} 
-            alt={name} 
-            width={100} 
-            height={100} 
-            className="rounded-full"
-          />
-          <div className="absolute inset-0 rounded-full bg-blue-500/10 dark:bg-blue-400/10"></div>
-        </motion.div>
-      </div>
-
-      {/* Contenido con animaciones sutiles */}
-      <div className="px-6 py-4 text-center">
-        <motion.h3 
-          className="text-2xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-gray-900 dark:from-blue-400 dark:to-gray-300"
-        >
-          {name}
-        </motion.h3>
-        <motion.p 
-          className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2"
-        >
-          {role}
-        </motion.p>
-        <motion.p 
-          className="text-gray-600 dark:text-gray-400 mb-1"
-        >
-          {company}
-        </motion.p>
-        <motion.p 
-          className="text-sm text-gray-500 dark:text-gray-500 mb-4"
-        >
-          {location}
-        </motion.p>
-        
-        <motion.div 
-          className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4"
-        >
-          <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-            {description}
-          </p>
-          {education && (
-            <p className="text-sm text-gray-500 dark:text-gray-500 mb-2">
-              <span className="font-medium">Educación:</span> {education}
-            </p>
-          )}
-        </motion.div>
-
-        {/* Estadísticas de LinkedIn con iconos */}
-        <div className="grid grid-cols-2 gap-4 my-4">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{followers.toLocaleString()}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Seguidores</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{connections.toLocaleString()}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Conexiones</p>
-          </div>
-        </div>
-
-        {/* Botón de LinkedIn con hover effect */}
-        <motion.a
-          href={linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center w-full px-6 py-3 mt-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-          </svg>
-          Ver perfil en LinkedIn
-        </motion.a>
-      </div>
-    </motion.div>
-  );
 };
 
 const Page = () => {

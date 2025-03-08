@@ -7,7 +7,7 @@ import { Menu, X } from 'lucide-react';
 import { Button } from "./ui/button";
 import { DarkModeToggle } from "./DarkModeToggle";
 
-export const Header = () => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -115,3 +115,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;

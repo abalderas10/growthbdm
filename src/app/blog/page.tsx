@@ -1,7 +1,7 @@
 import { BlogPostsPreview } from "@/components/BlogPostPreview";
 import { BlogPostsPagination } from "@/components/BlogPostsPagination";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { ParticleNetwork } from "@/components/ParticleNetwork";
 import { wisp } from "@/lib/wisp";
 

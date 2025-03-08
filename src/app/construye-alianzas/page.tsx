@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import SimpleMeetingScheduler from '@/components/Calendar/SimpleMeetingScheduler';
 import { PriceCard } from '@/components/ui/price-card';
 import { Button } from '@/components/ui/button';

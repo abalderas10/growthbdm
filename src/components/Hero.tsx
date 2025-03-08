@@ -4,7 +4,7 @@ import { FunctionComponent } from "react";
 import Link from 'next/link';
 import Image from 'next/image';
 
-export const Hero: FunctionComponent = () => {
+const Hero: FunctionComponent = () => {
   return (
     <div className="w-full h-screen flex items-center justify-center overflow-hidden pt-[80px]">
       {/* Background with gradient and pattern */}
@@ -50,3 +50,5 @@ export const Hero: FunctionComponent = () => {
     </div>
   );
 };
+
+export default Hero;

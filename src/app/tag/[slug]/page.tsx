@@ -1,7 +1,7 @@
 import { BlogPostsPreview } from "@/components/BlogPostPreview";
 import { BlogPostsPagination } from "@/components/BlogPostsPagination";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
 import { wisp } from "@/lib/wisp";
 import { CircleX } from "lucide-react";

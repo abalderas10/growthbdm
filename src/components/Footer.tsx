@@ -7,7 +7,7 @@ import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "./ui/button";
 import { MinimalNewsletter } from './MinimalNewsletter';
 
-export const Footer: FunctionComponent = () => {
+const Footer: FunctionComponent = () => {
   return (
     <footer className="w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
       <div className="w-full py-8 px-4">
@@ -35,3 +35,5 @@ export const Footer: FunctionComponent = () => {
     </footer>
   );
 };
+
+export default Footer;
