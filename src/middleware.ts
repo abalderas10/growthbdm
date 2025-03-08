@@ -1,46 +1,19 @@
-import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default async function middleware(req: NextRequestWithAuth) {
-  // Solo aplicar middleware a rutas que empiecen con /dashboard
-  if (!req.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.next();
-  }
-
-  const token = await getToken({ req });
-  const isAuth = !!token;
-  const isAuthPage = req.nextUrl.pathname.startsWith('/dashboard/login');
-
-  if (isAuthPage) {
-    if (isAuth) {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
-    }
-    return null;
-  }
-
-  if (!isAuth) {
-    let from = req.nextUrl.pathname;
-    if (req.nextUrl.search) {
-      from += req.nextUrl.search;
-    }
-
-    return NextResponse.redirect(
-      new URL(`/dashboard/login?from=${encodeURIComponent(from)}`, req.url)
-    );
-  }
-
-  // Verificar el email solo si estamos autenticados
-  if (isAuth && token.email) {
-    const isAllowedEmail = token.email.endsWith('@growthbdm.com') || 
-      ['alberto.balderas@growthbdm.com', 'adriana.vargas@growthbdm.com'].includes(token.email);
-
-    if (!isAllowedEmail) {
-      return NextResponse.redirect(new URL('/dashboard/error', req.url));
-    }
-  }
+export function middleware(request: NextRequest) {
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"]
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

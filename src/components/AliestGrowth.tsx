@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import SimpleMeetingScheduler from "./Calendar/SimpleMeetingScheduler";
+import { SimpleMeetingScheduler } from "./Calendar/SimpleMeetingScheduler";
 
 export default function AliestGrowth() {
   return (

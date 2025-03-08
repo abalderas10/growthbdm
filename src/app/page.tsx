@@ -6,10 +6,10 @@ import Hero from "@/components/Hero";
 import Image from 'next/image';
 import Link from 'next/link';
 import ArrowRight from '@/components/icons/ArrowRight';
-import AliestGrowth from "@/components/AliestGrowth";
+import AliestGrowth from '@/components/AliestGrowth';
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import SimpleMeetingScheduler from '@/components/Calendar/SimpleMeetingScheduler';
+import { SimpleMeetingScheduler } from '@/components/Calendar/SimpleMeetingScheduler';
 import { HorizontalBlogPosts } from "@/components/HorizontalBlogPosts";
 
 const Page = () => {

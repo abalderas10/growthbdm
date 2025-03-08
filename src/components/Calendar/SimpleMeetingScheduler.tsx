@@ -4,22 +4,25 @@ import { getCalApi } from "@calcom/embed-react";
 import { useEffect } from "react";
 import { Button } from '@/components/ui/button';
 
-export default function SimpleMeetingScheduler() {
+export function SimpleMeetingScheduler() {
   useEffect(() => {
     (async function () {
-      const cal = await getCalApi({ "namespace": "30min" });
+      const cal = await getCalApi();
       cal("ui", {
-        "hideEventTypeDetails": false,
-        "layout": "month_view"
+        styles: { branding: { brandColor: "#0066cc" } },
+        hideEventTypeDetails: false,
+        layout: "month_view"
       });
     })();
   }, []);
 
   const handleClick = async () => {
-    const cal = await getCalApi({ "namespace": "30min" });
+    const cal = await getCalApi();
     cal("modal", {
-      "calLink": "alberto-balderas/30min",
-      "config": { "layout": "month_view" }
+      calLink: "alberto-balderas/30min",
+      config: {
+        layout: "month_view"
+      }
     });
   };
 
@@ -27,7 +30,7 @@ export default function SimpleMeetingScheduler() {
     <Button 
       onClick={handleClick}
       variant="default" 
-      className="bg-primary hover:bg-primary/90"
+      className="bg-primary hover:bg-primary/90 w-full md:w-auto"
     >
       Agenda una Reunión
     </Button>

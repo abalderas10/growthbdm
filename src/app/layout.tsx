@@ -1,7 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import { Toaster } from "@/components/ui/toaster";
 import { Providers } from "@/components/providers";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -37,9 +35,7 @@ export default function RootLayout({
       <head />
       <body className={`h-full bg-background font-sans antialiased ${fontSans.variable}`}>
         <Providers>
-          <Header />
           {children}
-          <Toaster />
         </Providers>
       </body>
     </html>

@@ -1,86 +1,77 @@
 'use server';
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
+import { google } from 'googleapis';
+
+const calendar = google.calendar('v3');
 
 export async function getCalendarToken() {
-  const session = await getServerSession(authOptions);
-  if (!session) return null;
-  
-  // @ts-ignore - el token de acceso está en el token de sesión
-  return session.accessToken;
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/calendar'],
+  });
+
+  return auth;
 }
 
 export async function listCalendarEvents() {
-  const token = await getCalendarToken();
-  if (!token) return null;
+  const auth = await getCalendarToken();
+  if (!auth) return null;
 
   try {
-    const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await calendar.events.list({
+      auth,
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
     });
 
-    if (!response.ok) {
+    if (!response.data.items) {
       throw new Error('Error fetching calendar events');
     }
 
-    const data = await response.json();
-    return data.items;
+    return response.data.items;
   } catch (error) {
     console.error('Error fetching calendar events:', error);
     return null;
   }
 }
 
-export async function createCalendarEvent({
-  summary,
-  description,
-  startDateTime,
-  endDateTime,
-  attendeeEmail,
-}: {
-  summary: string;
-  description: string;
-  startDateTime: string;
-  endDateTime: string;
-  attendeeEmail: string;
-}) {
-  const token = await getCalendarToken();
-  if (!token) throw new Error('No token available');
-
+export async function createCalendarEvent(
+  summary: string,
+  description: string,
+  startTime: string,
+  endTime: string,
+  attendeeEmail: string
+) {
   try {
-    const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const auth = await getCalendarToken();
+    if (!auth) throw new Error('No token available');
+
+    const event = {
+      summary,
+      description,
+      start: {
+        dateTime: startTime,
+        timeZone: 'America/Mexico_City',
       },
-      body: JSON.stringify({
-        summary,
-        description,
-        start: {
-          dateTime: startDateTime,
-        },
-        end: {
-          dateTime: endDateTime,
-        },
-        attendees: [
-          { email: attendeeEmail },
-        ],
-        reminders: {
-          useDefault: true,
-        },
-      }),
+      end: {
+        dateTime: endTime,
+        timeZone: 'America/Mexico_City',
+      },
+      attendees: [{ email: attendeeEmail }],
+      reminders: {
+        useDefault: true,
+      },
+    };
+
+    const response = await calendar.events.insert({
+      auth,
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
+      requestBody: event,
     });
 
-    if (!response.ok) {
-      throw new Error('Error creating calendar event');
-    }
-
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error creating calendar event:', error);
     throw error;
@@ -88,29 +79,24 @@ export async function createCalendarEvent({
 }
 
 export async function getAvailability(startDate: Date, endDate: Date) {
-  const token = await getCalendarToken();
-  if (!token) throw new Error('No token available');
+  const auth = await getCalendarToken();
+  if (!auth) throw new Error('No token available');
 
   try {
-    const response = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const response = await calendar.freebusy.query({
+      auth,
+      requestBody: {
         timeMin: startDate.toISOString(),
         timeMax: endDate.toISOString(),
-        items: [{ id: 'primary' }],
-      }),
+        items: [{ id: process.env.GOOGLE_CALENDAR_ID }],
+      },
     });
 
-    if (!response.ok) {
+    if (!response.data.calendars) {
       throw new Error('Error getting availability');
     }
 
-    const data = await response.json();
-    return data.calendars?.primary.busy || [];
+    return response.data.calendars[process.env.GOOGLE_CALENDAR_ID].busy || [];
   } catch (error) {
     console.error('Error getting availability:', error);
     throw error;
@@ -118,18 +104,17 @@ export async function getAvailability(startDate: Date, endDate: Date) {
 }
 
 export async function deleteCalendarEvent(eventId: string) {
-  const token = await getCalendarToken();
-  if (!token) throw new Error('No token available');
+  const auth = await getCalendarToken();
+  if (!auth) throw new Error('No token available');
 
   try {
-    const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await calendar.events.delete({
+      auth,
+      calendarId: process.env.GOOGLE_CALENDAR_ID,
+      eventId,
     });
 
-    if (!response.ok) {
+    if (!response.status === 204) {
       throw new Error('Error deleting calendar event');
     }
   } catch (error) {
