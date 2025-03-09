@@ -9,7 +9,7 @@ export async function GET() {
   const timestamp = Math.round(new Date().getTime() / 1000);
   const signature = require('crypto')
     .createHash('sha1')
-    .update(`prefix=sampleGrowth/&timestamp=${timestamp}${apiSecret}`)
+    .update(`prefix=networking/&timestamp=${timestamp}${apiSecret}`)
     .digest('hex');
 
   try {
@@ -22,7 +22,7 @@ export async function GET() {
           Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')}`,
         },
         body: JSON.stringify({
-          expression: 'folder:sampleGrowth/*',
+          expression: 'folder:networking/*',
           max_results: 100,
         }),
       }
