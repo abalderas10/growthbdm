@@ -34,13 +34,13 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
     },
   };
 }
+
 interface Params {
   slug: string;
 }
 
 const Page = async (props: { params: Promise<Params> }) => {
   const params = await props.params;
-
   const { slug } = params;
 
   const result = await wisp.getPost(slug);
@@ -51,6 +51,12 @@ const Page = async (props: { params: Promise<Params> }) => {
   }
 
   const { title, publishedAt, updatedAt, image, author } = result.post;
+
+  // Remover la imagen del contenido si es la misma que la imagen principal
+  if (image && result.post.content) {
+    const imgRegex = new RegExp(`<img[^>]*src=["']${image}["'][^>]*>`);
+    result.post.content = result.post.content.replace(imgRegex, '');
+  }
 
   const jsonLd: WithContext<BlogPosting> = {
     "@context": "https://schema.org",
@@ -75,6 +81,16 @@ const Page = async (props: { params: Promise<Params> }) => {
       <div className="container mx-auto px-5">
         <Header />
         <div className="max-w-prose mx-auto text-xl">
+          {/* Mostrar la imagen principal si existe */}
+          {image && (
+            <div className="my-8 relative aspect-[16/9] overflow-hidden rounded-lg">
+              <img
+                src={image}
+                alt={title}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
           <BlogPostContent post={result.post} />
           <RelatedPosts posts={posts} />
           <CommentSection slug={slug} />

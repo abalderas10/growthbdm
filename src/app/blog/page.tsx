@@ -11,7 +11,7 @@ const Page = async (
   }
 ) => {
   const searchParams = await props.searchParams;
-  const page = searchParams.page ? parseInt(searchParams.page as string) : 1;
+  const page = searchParams.page ? Number.parseInt(searchParams.page as string, 10) : 1;
   const result = await wisp.getPosts({ limit: 6, page });
   
   return (

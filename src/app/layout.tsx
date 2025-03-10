@@ -1,10 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -34,25 +31,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [queryClient] = useState(() => new QueryClient());
-
   return (
     <html lang="es" suppressHydrationWarning>
       <head />
-      <body className={`h-full bg-background font-sans antialiased ${fontSans.variable}`}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
-              {children}
-            </Providers>
-            <Toaster />
-          </ThemeProvider>
-        </QueryClientProvider>
+      <body className={`min-h-screen bg-background font-sans antialiased ${fontSans.variable}`}>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
