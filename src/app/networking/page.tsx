@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Users, Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useStripeProduct } from "@/lib/hooks/useStripeProduct";
-import { useCloudinaryGallery } from "@/lib/hooks/useCloudinaryGallery";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
@@ -35,14 +34,10 @@ const staggerContainer = {
   }
 };
 
-// Función para generar un ID único para los skeletons
-const generateSkeletonId = () => Math.random().toString(36).substring(2, 15);
-
 export default function NetworkingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { product, isLoading: productLoading, error: productError } = useStripeProduct(NETWORKING_EVENT.productId);
-  const { images, isLoading: galleryLoading, error: galleryError } = useCloudinaryGallery();
 
   const handleCheckout = async () => {
     try {
@@ -185,52 +180,7 @@ export default function NetworkingPage() {
             </p>
           </motion.div>
 
-          {galleryLoading ? (
-            <div className="space-y-8">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                {Array.from({ length: 10 }, () => (
-                  <div
-                    key={generateSkeletonId()}
-                    className="aspect-[4/3] bg-gradient-to-br from-primary/5 to-primary/10 animate-pulse rounded-xl"
-                    role="presentation"
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-              <p className="text-center text-muted-foreground animate-pulse">
-                Cargando imágenes de eventos anteriores...
-              </p>
-            </div>
-          ) : galleryError ? (
-            <div className="min-h-[300px] flex flex-col items-center justify-center space-y-4 p-8 rounded-xl bg-destructive/5 text-destructive">
-              <div className="text-center">
-                <p className="text-xl font-semibold mb-2">Error al cargar la galería</p>
-                <p className="text-base text-destructive/80">
-                  Lo sentimos, no pudimos cargar las imágenes. Por favor, intenta más tarde.
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                className="mt-4 border-destructive/20 hover:bg-destructive/10"
-                onClick={() => window.location.reload()}
-              >
-                Intentar de nuevo
-              </Button>
-            </div>
-          ) : images.length === 0 ? (
-            <div className="min-h-[300px] flex flex-col items-center justify-center space-y-4 p-8 rounded-xl bg-primary/5">
-              <div className="text-center">
-                <p className="text-xl font-semibold mb-2 text-primary">No hay imágenes disponibles</p>
-                <p className="text-base text-muted-foreground">
-                  Pronto compartiremos momentos de nuestros eventos.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="overflow-hidden">
-              <ImageGallery images={images} />
-            </div>
-          )}
+          <ImageGallery />
         </div>
       </section>
 

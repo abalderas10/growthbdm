@@ -1,22 +1,20 @@
 export interface CloudinaryImage {
-  public_id: string;
-  secure_url: string;
-  created_at: string;
-  width: number;
+  id: string;
   height: number;
+  width: number;
+  public_id: string;
   format: string;
-  resource_type: string;
+  blurDataUrl?: string;
+  created_at: string;
   context?: {
     alt?: string;
     caption?: string;
     location?: string;
   };
-  tags?: string[];
 }
 
 export interface CloudinaryResponse {
   resources: CloudinaryImage[];
-  next_cursor?: string;
-  rate_limit_remaining?: number;
-  rate_limit_reset_at?: string;
+  next_cursor: string | null;
+  total_count: number;
 }

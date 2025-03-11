@@ -5,8 +5,8 @@ const nextConfig = {
     domains: [
       'res.cloudinary.com',
       'images.unsplash.com',
-      'localhost', 
-      'imagedelivery.net', 
+      'localhost',
+      'imagedelivery.net',
       'files.stripe.com'
     ],
     formats: ['image/avif', 'image/webp'],
@@ -29,6 +29,12 @@ const nextConfig = {
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  },
+  serverRuntimeConfig: {
+    port: 3022
+  },
+  publicRuntimeConfig: {
+    port: 3022
   }
 };
 
