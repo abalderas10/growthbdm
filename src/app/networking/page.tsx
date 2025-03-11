@@ -180,7 +180,7 @@ export default function NetworkingPage() {
                 onClick={handleCheckout}
                 disabled={isLoading}
                 size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 text-lg px-8 py-6 h-auto"
+                className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white text-xl px-12 py-8 h-auto rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
                 {isLoading ? 'Procesando...' : 'Reservar Lugar'}
               </Button>
