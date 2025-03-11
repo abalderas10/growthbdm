@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 // Verificar que la clave de API existe
@@ -13,47 +12,80 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export async function POST(request: Request) {
   try {
-    const { priceId, successUrl, cancelUrl } = await request.json();
+    const { priceId, productId, quantity = 1, mode = 'payment' } = await request.json();
+    console.log('Recibida solicitud de checkout:', { priceId, productId, mode });
 
     if (!priceId) {
-      return NextResponse.json(
+      console.error('Error: priceId no proporcionado');
+      return Response.json(
         { error: 'Se requiere el ID del precio' },
         { status: 400 }
       );
     }
 
-    // Crear la sesión de checkout
-    const session = await stripe.checkout.sessions.create({
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3077';
+    console.log('URL base:', baseUrl);
+
+    // Configuración base de la sesión
+    const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ['card'],
       line_items: [
         {
           price: priceId,
-          quantity: 1,
+          quantity: quantity,
         },
       ],
-      mode: 'payment',
-      success_url: successUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
-      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/networking`,
+      mode: mode as Stripe.Checkout.SessionCreateParams.Mode,
+      success_url: `${baseUrl}/success`,
+      cancel_url: `${baseUrl}/construye-alianzas`,
       allow_promotion_codes: true,
       locale: 'es',
       currency: 'mxn',
-      customer_creation: 'always',
-      billing_address_collection: 'required',
+      billing_address_collection: 'required' as Stripe.Checkout.SessionCreateParams.BillingAddressCollection,
       phone_number_collection: {
         enabled: true,
       },
       custom_text: {
         submit: {
-          message: 'Al hacer clic en pagar, aceptas nuestros términos y condiciones.',
+          message: mode === 'subscription' 
+            ? 'Al suscribirte, aceptas nuestros términos y condiciones.' 
+            : 'Al realizar el pago, aceptas nuestros términos y condiciones.',
         },
       },
-    });
+    };
 
-    return NextResponse.json({ sessionId: session.id });
+    // Agregar customer_creation solo en modo payment
+    if (mode === 'payment') {
+      sessionConfig.customer_creation = 'always';
+    }
+
+    console.log('Creando sesión de checkout con config:', JSON.stringify(sessionConfig, null, 2));
+    
+    try {
+      const session = await stripe.checkout.sessions.create(sessionConfig);
+      console.log('Sesión creada exitosamente:', session.id);
+      return Response.json({ sessionId: session.id });
+    } catch (stripeError) {
+      if (stripeError instanceof Stripe.errors.StripeError) {
+        console.error('Error de Stripe al crear la sesión:', stripeError.message);
+        return Response.json(
+          { error: `Error de Stripe: ${stripeError.message}` },
+          { status: 500 }
+        );
+      }
+      throw stripeError;
+    }
   } catch (error) {
-    console.error('Error al crear la sesión de checkout:', error);
-    return NextResponse.json(
-      { error: 'Error al crear la sesión de checkout' },
+    if (error instanceof Error) {
+      console.error('Error al crear la sesión de checkout:', error.message);
+      return Response.json(
+        { error: error.message },
+        { status: 500 }
+      );
+    }
+    console.error('Error desconocido:', error);
+    return Response.json(
+      { error: 'Error interno del servidor' },
       { status: 500 }
     );
   }

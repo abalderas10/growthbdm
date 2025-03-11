@@ -11,6 +11,7 @@ import { useInView } from "react-intersection-observer";
 import ContactForm from "../../components/ContactForm";
 import { Check, Zap, Globe, Shield, Brain } from "lucide-react";
 import { CheckCircle2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 // Configuración de Stripe
 const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
@@ -48,40 +49,77 @@ export default function ConstruyeAlianzas() {
     threshold: 0.1
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handlePayment = async () => {
+  const handleCheckout = async (priceId: string, productId: string, mode: 'payment' | 'subscription') => {
     try {
+      setIsLoading(true);
       const stripe = await stripePromise;
-      if (!stripe) throw new Error('Stripe no está cargado');
+      if (!stripe) {
+        console.error('Error: Stripe no está inicializado. Verifica NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY');
+        throw new Error('Error al inicializar Stripe');
+      }
 
+      console.log('Iniciando checkout con:', { priceId, productId, mode });
+      
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          priceId: 'price_1QxFi6P1CcAYKMEzLi6VCkP0',
-          productId: 'prod_Rqxdf37ruTalZu',
+          priceId,
+          productId,
           quantity: 1,
+          mode,
         }),
       });
 
-      const session = await response.json();
-      if (!session || !session.id) throw new Error('Error al crear la sesión de checkout');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        console.error('Error en la respuesta del servidor:', data);
+        throw new Error(data.error || 'Error al crear la sesión de checkout');
+      }
 
-      const result = await stripe.redirectToCheckout({
-        sessionId: session.id
+      if (!data.sessionId) {
+        console.error('Respuesta inválida del servidor:', data);
+        throw new Error('Respuesta inválida del servidor');
+      }
+
+      console.log('Redirigiendo a checkout con sessionId:', data.sessionId);
+      
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId
       });
 
-      if (result.error) {
-        console.error('Error en checkout:', result.error);
-        throw new Error(result.error.message);
+      if (error) {
+        console.error('Error en redirectToCheckout:', error);
+        throw new Error(error.message);
       }
     } catch (error) {
-      console.error('Error al procesar el pago:', error);
-      // Aquí puedes mostrar un mensaje de error al usuario
+      console.error('Error detallado al procesar el pago:', error);
+      toast({
+        title: "Error en el Proceso de Pago",
+        description: error instanceof Error ? error.message : "Hubo un problema al procesar tu solicitud. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleSubscription = () => handleCheckout(
+    'price_1QwDX6P1CcAYKMEzAHOPsdSD',
+    'prod_RptJzpgYz5FXOe',
+    'subscription'
+  );
+
+  const handleTicketPurchase = () => handleCheckout(
+    'price_1QyljqP1CcAYKMEzKHVCsimR',
+    'prod_RsWnCXR23J6v7x',
+    'payment'
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -274,7 +312,7 @@ export default function ConstruyeAlianzas() {
                   </ul>
                   <Button 
                     className="w-full bg-primary/10 hover:bg-primary/20 transition-colors"
-                    onClick={handlePayment}
+                    onClick={handleSubscription}
                     disabled={isLoading}
                   >
                     {isLoading ? 'Procesando...' : 'Suscribirse'}
@@ -328,7 +366,7 @@ export default function ConstruyeAlianzas() {
                   </p>
                   <Button 
                     className="w-full bg-primary/10 hover:bg-primary/20 transition-colors"
-                    onClick={() => handlePayment()}
+                    onClick={handleTicketPurchase}
                     disabled={isLoading}
                   >
                     {isLoading ? 'Procesando...' : 'Comprar Ahora'}

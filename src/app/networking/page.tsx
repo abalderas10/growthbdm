@@ -36,7 +36,7 @@ export default function NetworkingPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          priceId: 'price_1QxFi6P1CcAYKMEzLi6VCkP0',
+          priceId: 'price_1QwDX6P1CcAYKMEzAHOPsdSD',
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/networking`,
         }),
