@@ -10,5 +10,6 @@ if (!process.env.NEXT_PUBLIC_BLOG_ID) {
 
 export const wisp = buildWispClient({
   blogId: process.env.NEXT_PUBLIC_BLOG_ID,
-  baseUrl: "https://www.wisp.blog"
+  baseUrl: "https://www.wisp.blog",
+  hideAttribution: true // Ocultar la atribución "Powered by wisp"
 });

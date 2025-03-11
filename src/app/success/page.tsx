@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
@@ -9,8 +9,7 @@ import { CheckCircle } from 'lucide-react';
 export default function Success() {
   const [countdown, setCountdown] = useState(10);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  const { session_id: sessionId } = router.query || {};
 
   useEffect(() => {
     // Redirección automática después de 10 segundos

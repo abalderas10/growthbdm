@@ -43,6 +43,7 @@ const Page = () => {
           <button 
             onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 animate-bounce"
+            type="button"
           >
             <ChevronDown className="w-8 h-8" />
           </button>
@@ -52,14 +53,14 @@ const Page = () => {
         <section className="w-full relative overflow-hidden py-20">
           {/* Fondo con gradiente y efecto de malla */}
           <div className="absolute inset-0 w-full bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
           </div>
-          <div className="absolute right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/10 to-transparent dark:from-blue-400/10"></div>
+          <div className="absolute right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/10 to-transparent dark:from-blue-400/10" />
           
           <div className="container mx-auto px-4 py-16 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
               <div className="relative aspect-[4/3] w-full h-full">
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-gray-900/20 rounded-xl blur-2xl"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-gray-900/20 rounded-xl blur-2xl" />
                 <Image
                   src="/avo1.png"
                   alt="Growth Business Developer"
@@ -69,7 +70,7 @@ const Page = () => {
                 />
               </div>
               <div className="space-y-6 relative">
-                <div className="absolute -inset-4 bg-white/50 dark:bg-gray-800/50 rounded-2xl backdrop-blur-sm"></div>
+                <div className="absolute -inset-4 bg-white/50 dark:bg-gray-800/50 rounded-2xl backdrop-blur-sm" />
                 <div className="relative space-y-6 p-8">
                   <h2 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
                     Un Growth Business Developer
@@ -91,18 +92,18 @@ const Page = () => {
         <section className="w-full min-h-screen relative overflow-hidden">
           {/* Fondo con efecto de degradado y patrón */}
           <div className="absolute inset-0 w-full bg-gradient-to-br from-gray-900 to-blue-900">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:32px_32px]" />
           </div>
           
           {/* Efectos de fondo */}
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full filter blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gray-900/20 rounded-full filter blur-3xl"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full filter blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gray-900/20 rounded-full filter blur-3xl" />
 
           <div className="container mx-auto px-4 py-16 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
               <div className="space-y-8 order-2 lg:order-1">
                 <div className="relative">
-                  <div className="absolute -inset-4 bg-white/10 rounded-2xl backdrop-blur-sm"></div>
+                  <div className="absolute -inset-4 bg-white/10 rounded-2xl backdrop-blur-sm" />
                   <div className="relative space-y-6 p-8">
                     <h2 className="text-4xl font-bold text-white sm:text-5xl">
                       Estrategias de{' '}
@@ -126,7 +127,7 @@ const Page = () => {
                 </div>
               </div>
               <div className="relative aspect-[4/3] w-full h-full order-1 lg:order-2">
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-gray-900/20 rounded-xl blur-2xl"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-gray-900/20 rounded-xl blur-2xl" />
                 <Image
                   src="/3.jpeg"
                   alt="Estrategias de Expansión"
@@ -163,7 +164,7 @@ const Page = () => {
 
         {/* Growth Intelligence Section */}
         <section className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 relative">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
           <div className="container mx-auto px-4 py-16 relative z-10">
             <AliestGrowth />
           </div>

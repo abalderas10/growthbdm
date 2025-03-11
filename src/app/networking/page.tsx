@@ -35,6 +35,9 @@ const staggerContainer = {
   }
 };
 
+// Función para generar un ID único para los skeletons
+const generateSkeletonId = () => Math.random().toString(36).substring(2, 15);
+
 export default function NetworkingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -45,18 +48,11 @@ export default function NetworkingPage() {
     try {
       setIsLoading(true);
       const stripe = await stripePromise;
-      if (!stripe) {
-        console.error('Error: Stripe no está inicializado. Verifica NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY');
-        throw new Error('Error al inicializar Stripe');
-      }
+      if (!stripe) throw new Error('Error al inicializar Stripe');
 
-      console.log('Iniciando checkout para evento de networking');
-      
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           priceId: NETWORKING_EVENT.priceId,
           productId: NETWORKING_EVENT.productId,
@@ -67,31 +63,16 @@ export default function NetworkingPage() {
 
       const data = await response.json();
       
-      if (!response.ok) {
-        console.error('Error en la respuesta del servidor:', data);
-        throw new Error(data.error || 'Error al crear la sesión de checkout');
-      }
+      if (!response.ok) throw new Error(data.error || 'Error al crear la sesión de checkout');
+      if (!data.sessionId) throw new Error('Respuesta inválida del servidor');
 
-      if (!data.sessionId) {
-        console.error('Respuesta inválida del servidor:', data);
-        throw new Error('Respuesta inválida del servidor');
-      }
-
-      console.log('Redirigiendo a checkout con sessionId:', data.sessionId);
-      
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId
-      });
-
-      if (error) {
-        console.error('Error en redirectToCheckout:', error);
-        throw new Error(error.message);
-      }
+      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+      if (error) throw error;
     } catch (error) {
-      console.error('Error detallado al procesar el pago:', error);
+      console.error('Error al procesar el pago:', error);
       toast({
         title: "Error en el Proceso de Pago",
-        description: error instanceof Error ? error.message : "Hubo un problema al procesar tu solicitud. Por favor, intenta de nuevo.",
+        description: error instanceof Error ? error.message : "Hubo un problema al procesar tu solicitud.",
         variant: "destructive",
       });
     } finally {
@@ -99,7 +80,6 @@ export default function NetworkingPage() {
     }
   };
 
-  // Mostrar estado de carga mientras se obtiene la información del producto
   if (productLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -108,7 +88,6 @@ export default function NetworkingPage() {
     );
   }
 
-  // Mostrar error si no se pudo cargar el producto
   if (productError) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -145,7 +124,7 @@ export default function NetworkingPage() {
             className="max-w-4xl mx-auto text-center space-y-12"
           >
             <motion.div variants={fadeInUp}>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-foreground">
                 {product?.name || 'Evento de Networking'}
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed">
@@ -180,51 +159,81 @@ export default function NetworkingPage() {
                 onClick={handleCheckout}
                 disabled={isLoading}
                 size="lg"
-                className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white text-xl px-12 py-8 h-auto rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 text-xl px-12 py-8 h-auto rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
                 {isLoading ? 'Procesando...' : 'Reservar Lugar'}
               </Button>
             </motion.div>
           </motion.section>
         </div>
+      </main>
 
-        <section className="py-24 lg:py-32">
+      {/* Sección de galería con ancho completo */}
+      <section className="w-full bg-muted/30 border-y border-muted">
+        <div className="container mx-auto py-24 lg:py-32">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
-            className="text-center space-y-4 mb-16"
+            className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-              Eventos Anteriores
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              Galería de Eventos
             </h2>
-            <div className="text-xl text-muted-foreground">
-              Explora momentos memorables de nuestros eventos pasados
-            </div>
+            <p className="text-xl text-muted-foreground">
+              Revive los mejores momentos de nuestros eventos anteriores
+            </p>
           </motion.div>
 
           {galleryLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {Array.from({ length: 10 }, (_, i) => `skeleton-${i}`).map((id) => (
-                <div
-                  key={id}
-                  className="aspect-square bg-secondary/10 animate-pulse rounded-xl"
-                />
-              ))}
+            <div className="space-y-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+                {Array.from({ length: 10 }, () => (
+                  <div
+                    key={generateSkeletonId()}
+                    className="aspect-[4/3] bg-gradient-to-br from-primary/5 to-primary/10 animate-pulse rounded-xl"
+                    role="presentation"
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+              <p className="text-center text-muted-foreground animate-pulse">
+                Cargando imágenes de eventos anteriores...
+              </p>
             </div>
           ) : galleryError ? (
-            <div className="text-center text-red-500 min-h-[300px] flex items-center justify-center">
-              <div>
+            <div className="min-h-[300px] flex flex-col items-center justify-center space-y-4 p-8 rounded-xl bg-destructive/5 text-destructive">
+              <div className="text-center">
                 <p className="text-xl font-semibold mb-2">Error al cargar la galería</p>
-                <p>Por favor, intenta más tarde</p>
+                <p className="text-base text-destructive/80">
+                  Lo sentimos, no pudimos cargar las imágenes. Por favor, intenta más tarde.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                className="mt-4 border-destructive/20 hover:bg-destructive/10"
+                onClick={() => window.location.reload()}
+              >
+                Intentar de nuevo
+              </Button>
+            </div>
+          ) : images.length === 0 ? (
+            <div className="min-h-[300px] flex flex-col items-center justify-center space-y-4 p-8 rounded-xl bg-primary/5">
+              <div className="text-center">
+                <p className="text-xl font-semibold mb-2 text-primary">No hay imágenes disponibles</p>
+                <p className="text-base text-muted-foreground">
+                  Pronto compartiremos momentos de nuestros eventos.
+                </p>
               </div>
             </div>
           ) : (
-            <ImageGallery images={images} />
+            <div className="overflow-hidden">
+              <ImageGallery images={images} />
+            </div>
           )}
-        </section>
-      </main>
-      
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

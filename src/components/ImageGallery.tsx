@@ -1,34 +1,82 @@
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X, Calendar, MapPin } from 'lucide-react';
-import type { CloudinaryImage } from '@/lib/hooks/useCloudinaryGallery';
+import { useCloudinaryGallery } from '@/lib/hooks/useCloudinaryGallery';
+import { motion } from 'framer-motion';
+import { Skeleton } from '@/components/ui/skeleton';
+import { RefreshCw } from 'lucide-react';
+import type { CloudinaryImage } from '@/lib/types/cloudinary';
 
 interface ImageGalleryProps {
   images: CloudinaryImage[];
 }
 
-export function ImageGallery({ images }: ImageGalleryProps) {
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
+export function ImageGallery() {
+  const { images, isLoading, error, refetch } = useCloudinaryGallery();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Precarga de imágenes
-  useEffect(() => {
-    const imagePromises = images.map((image) => {
-      return new Promise<void>((resolve, reject) => {
-        const img = new window.Image();
-        img.src = image.url;
-        img.onload = () => resolve();
-        img.onerror = (error) => reject(error);
-      });
-    });
+  if (isLoading) {
+    return (
+      <output className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" aria-label="Cargando galería">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton
+            key={`skeleton-${i}-${Date.now()}`}
+            className="aspect-[4/3] rounded-xl bg-primary/5"
+          />
+        ))}
+        <span className="sr-only">Cargando imágenes...</span>
+      </output>
+    );
+  }
 
-    Promise.all(imagePromises)
-      .then(() => setIsLoading(false))
-      .catch((error) => console.error('Error al precargar imágenes:', error));
-  }, [images]);
+  if (error) {
+    return (
+      <output className="flex flex-col items-center justify-center p-8 rounded-xl bg-destructive/5 text-destructive" aria-live="polite">
+        <p className="text-lg font-semibold mb-4">Error al cargar la galería</p>
+        <Button
+          variant="outline"
+          onClick={() => refetch()}
+          className="border-destructive/20 hover:bg-destructive/10"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
+          Intentar de nuevo
+        </Button>
+      </output>
+    );
+  }
+
+  if (!images || images.length === 0) {
+    return (
+      <output className="flex flex-col items-center justify-center p-8 rounded-xl bg-primary/5" aria-live="polite">
+        <p className="text-lg font-semibold text-primary mb-2">
+          No hay imágenes disponibles
+        </p>
+        <p className="text-muted-foreground text-center">
+          Pronto compartiremos momentos de nuestros eventos.
+        </p>
+      </output>
+    );
+  }
 
   const handlePrevious = useCallback(() => {
     if (selectedImage === null) return;
@@ -52,53 +100,67 @@ export function ImageGallery({ images }: ImageGalleryProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {Array.from({ length: 10 }, (_, i) => `skeleton-${i}`).map((id) => (
-          <div
-            key={id}
-            className="aspect-square bg-gray-200 animate-pulse rounded-lg"
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 py-16">
-        {images.map((image, index) => (
-          <button
-            key={image.id}
-            className="relative aspect-square overflow-hidden rounded-lg group focus:outline-none focus:ring-2 focus:ring-primary"
-            onClick={() => setSelectedImage(index)}
-            onKeyDown={(e: ReactKeyboardEvent<HTMLButtonElement>) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setSelectedImage(index);
-              }
-            }}
-            aria-label={`Ver ${image.alt}`}
-          >
-            <Image
-              src={image.url}
-              alt={image.alt}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-              quality={80}
-            />
-            <div 
-              className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              aria-hidden="true"
-            />
-          </button>
-        ))}
-      </div>
+      <table className="w-full border-collapse" role="presentation">
+        <tbody>
+          <tr>
+            <td>
+              <motion.div
+                variants={container}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+              >
+                {images.map((image, index) => (
+                  <motion.button
+                    key={image.public_id}
+                    variants={item}
+                    className="relative aspect-[4/3] group overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    onClick={() => setSelectedImage(index)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedImage(index);
+                      }
+                    }}
+                    aria-label={`Ver imagen: ${image.context?.alt || 'Imagen de evento'}`}
+                  >
+                    <img
+                      src={image.secure_url}
+                      alt={image.context?.alt || 'Imagen de evento'}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <div 
+                      className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      aria-hidden="true"
+                    >
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <p className="text-white text-sm truncate">
+                          {image.context?.caption || 'Evento'}
+                        </p>
+                        {image.created_at && (
+                          <p className="text-white/80 text-xs mt-1">
+                            {new Date(image.created_at).toLocaleDateString('es-MX', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </motion.button>
+                ))}
+              </motion.div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <Dialog open={selectedImage !== null} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 bg-black/90">
+        <DialogContent className="max-w-7xl max-h-[90vh] p-0 bg-black/95">
           <Button
             variant="ghost"
             size="icon"
@@ -111,33 +173,27 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           </Button>
           
           {selectedImage !== null && (
-            <div className="relative w-full h-[80vh]">
-              <Image
-                src={images[selectedImage].url}
-                alt={images[selectedImage].alt}
-                fill
-                className="object-contain"
-                quality={100}
-                priority
+            <div className="relative w-full h-[85vh]">
+              <img
+                src={images[selectedImage].secure_url}
+                alt={images[selectedImage].context?.alt || `Imagen de evento ${selectedImage + 1}`}
+                className="w-full h-full object-contain"
               />
               
               {/* Información de la imagen */}
-              <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-4">
-                <div className="flex flex-wrap gap-4 items-center text-sm">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{new Date(images[selectedImage].createdAt).toLocaleDateString('es-MX', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}</span>
-                  </div>
-                  {images[selectedImage].location && (
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent text-white p-4">
+                <div className="flex flex-col gap-2">
+                  <p className="text-lg font-medium">{images[selectedImage].context?.caption || `Evento ${selectedImage + 1}`}</p>
+                  <div className="flex flex-wrap gap-4 items-center text-sm opacity-90">
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      <span>{images[selectedImage].location}</span>
+                      <Calendar className="h-4 w-4" />
+                      <span>{new Date(images[selectedImage].created_at).toLocaleDateString('es-MX', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</span>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
               

@@ -23,7 +23,7 @@ if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
 // Configuración de Cloudinary
 const cloudinaryConfig = {
   cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'de4dpzh9c',
-  folder: 'sampleGrowth',  // Según MEMORY[70d8540e-cfa4-487c-ae1f-1ac52102eaac]
+  folder: 'GrowthNetworking',  // Carpeta específica para imágenes de eventos
   maxResults: 100,
 };
 
@@ -58,10 +58,10 @@ export async function GET() {
       throw new Error('No se encontraron recursos en Cloudinary');
     }
 
-    // Transformar las URLs para usar el formato optimizado según las memorias
+    // Transformar las URLs para usar el formato optimizado
     const transformedResources = result.resources.map((resource: CloudinaryResource) => ({
       id: resource.asset_id,
-      url: resource.secure_url.replace('/upload/', '/upload/q_80,f_auto,c_fill,ar_1:1/'),
+      url: resource.secure_url.replace('/upload/', '/upload/q_85,f_auto,c_fill,g_faces,w_800,h_600/'),
       createdAt: resource.created_at,
       location: resource.context?.custom?.location,
       eventName: resource.context?.custom?.event_name,

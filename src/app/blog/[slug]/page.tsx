@@ -1,104 +1,115 @@
-import { BlogPostContent } from "@/components/BlogPostContent";
-import { CommentSection } from "@/components/CommentSection";
-import { RelatedPosts } from "@/components/RelatedPosts";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import { config } from "@/config";
-import { signOgImageUrl } from "@/lib/og-image";
-import { wisp } from "@/lib/wisp";
-import { notFound } from "next/navigation";
-import type { BlogPosting, WithContext } from "schema-dts";
+import { wisp } from '@/lib/wisp';
+import { BlogPostContent } from '@/components/BlogPostContent';
+import { notFound } from 'next/navigation';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { ParticleNetwork } from '@/components/ParticleNetwork';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
-export async function generateMetadata(props: { params: Promise<Params> }) {
-  const params = await props.params;
+interface PageProps {
+  params: { slug: string };
+}
 
-  const { slug } = params;
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const result = await wisp.getPost(params.slug);
 
-  const result = await wisp.getPost(slug);
   if (!result || !result.post) {
     return {
-      title: "Blog post not found",
+      title: 'Post no encontrado - Growth BDM',
+      description: 'El artículo que buscas no existe o ha sido movido.',
     };
   }
 
-  const { title, description, image } = result.post;
-  const generatedOgImage = signOgImageUrl({ title, brand: config.blog.name });
+  const previousImages = (await parent).openGraph?.images || [];
+  const post = result.post;
 
   return {
-    title,
-    description,
+    title: `${post.title} - Growth BDM`,
+    description: post.description || 'Artículo del blog de Growth BDM',
     openGraph: {
-      title,
-      description,
-      images: image ? [generatedOgImage, image] : [generatedOgImage],
+      title: post.title,
+      description: post.description || 'Artículo del blog de Growth BDM',
+      type: 'article',
+      publishedTime: post.createdAt.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      images: post.image ? [post.image, ...previousImages] : previousImages,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description || 'Artículo del blog de Growth BDM',
+      images: post.image ? [post.image] : [],
     },
   };
 }
 
-interface Params {
-  slug: string;
-}
-
-const Page = async (props: { params: Promise<Params> }) => {
-  const params = await props.params;
-  const { slug } = params;
-
-  const result = await wisp.getPost(slug);
-  const { posts } = await wisp.getRelatedPosts({ slug, limit: 3 });
+export default async function BlogPostPage({ params }: PageProps) {
+  const result = await wisp.getPost(params.slug);
 
   if (!result || !result.post) {
-    return notFound();
+    notFound();
   }
 
-  const { title, publishedAt, updatedAt, image, author } = result.post;
-
-  // Remover la imagen del contenido si es la misma que la imagen principal
-  if (image && result.post.content) {
-    const imgRegex = new RegExp(`<img[^>]*src=["']${image}["'][^>]*>`);
-    result.post.content = result.post.content.replace(imgRegex, '');
-  }
-
-  const jsonLd: WithContext<BlogPosting> = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: title,
-    image: image ? image : undefined,
-    datePublished: publishedAt ? publishedAt.toString() : undefined,
-    dateModified: updatedAt.toString(),
-    author: {
-      "@type": "Person",
-      name: author.name ?? undefined,
-      image: author.image ?? undefined,
-    },
-  };
+  const post = result.post;
+  const formattedDate = format(post.createdAt, "d 'de' MMMM, yyyy", { locale: es });
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <div className="container mx-auto px-5">
-        <Header />
-        <div className="max-w-prose mx-auto text-xl">
-          {/* Mostrar la imagen principal si existe */}
-          {image && (
-            <div className="my-8 relative aspect-[16/9] overflow-hidden rounded-lg">
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="relative">
+        {/* Hero Section con imagen de portada */}
+        <div className="relative overflow-hidden h-[400px] md:h-[500px]">
+          {post.image ? (
+            <div className="absolute inset-0">
               <img
-                src={image}
-                alt={title}
-                className="object-cover w-full h-full"
+                src={post.image}
+                alt={post.title}
+                className="w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-black/50" />
             </div>
+          ) : (
+            <ParticleNetwork />
           )}
-          <BlogPostContent post={result.post} />
-          <RelatedPosts posts={posts} />
-          <CommentSection slug={slug} />
+          
+          <div className="relative h-full flex items-center">
+            <div className="container mx-auto px-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-6">
+                {post.title}
+              </h1>
+              {post.description && (
+                <p className="text-xl text-gray-200 text-center max-w-3xl mx-auto">
+                  {post.description}
+                </p>
+              )}
+              <div className="text-center mt-8 text-gray-300">
+                <time dateTime={post.createdAt.toISOString()}>{formattedDate}</time>
+                {post.author?.name && (
+                  <>
+                    <span className="mx-2">•</span>
+                    <span>{post.author.name}</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-        <Footer />
-      </div>
-    </>
-  );
-};
 
-export default Page;
+        {/* Contenido del Post */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto">
+            <BlogPostContent post={post} className="mt-8" />
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

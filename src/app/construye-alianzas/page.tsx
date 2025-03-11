@@ -127,7 +127,7 @@ export default function ConstruyeAlianzas() {
       
       <main>
         {/* Hero Section con gradiente y efecto de luz */}
-        <section className="relative overflow-hidden py-20 bg-gradient-to-br from-background via-background to-primary/10">
+        <section className="relative overflow-hidden pt-32 pb-20 bg-gradient-to-br from-background via-background to-primary/10">
           <div className="absolute inset-0 bg-grid-white/5" />
           <div className="container mx-auto px-4 relative">
             <motion.div 

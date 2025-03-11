@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3022",
+    "dev": "next dev -p 3077",
     "build": "next build",
-    "start": "next start -p 3022",
+    "start": "next start -p 3077",
     "lint": "next lint"
   },
   "dependencies": {
@@ -39,7 +39,7 @@
     "framer-motion": "^12.4.10",
     "lucide-react": "^0.424.0",
     "motion": "^12.4.10",
-    "next": "15.1.6",
+    "next": "14.2.3",
     "next-cloudinary": "^6.16.0",
     "next-themes": "^0.3.0",
     "postcss": "^8.4.14",
@@ -68,7 +68,7 @@
     "@types/react-dom": "18.0.8",
     "@types/rss": "^0.0.32",
     "eslint": "^8",
-    "eslint-config-next": "15.1.6",
+    "eslint-config-next": "14.2.3",
     "schema-dts": "^1.1.2",
     "typescript": "^5"
   },
