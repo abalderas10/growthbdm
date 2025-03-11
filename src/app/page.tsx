@@ -10,7 +10,6 @@ import AliestGrowth from '@/components/AliestGrowth';
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { SimpleMeetingScheduler } from '@/components/Calendar/SimpleMeetingScheduler';
-import { HorizontalBlogPosts } from "@/components/HorizontalBlogPosts";
 
 const Page = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -158,9 +157,6 @@ const Page = () => {
                   <p className="text-gray-300">Aporta soluciones innovadoras y genera sinergias</p>
                 </div>
               </div>
-
-              {/* Blog Posts Carousel */}
-              <HorizontalBlogPosts />
             </div>
           </div>
         </section>
