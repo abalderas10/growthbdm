@@ -17,7 +17,7 @@ interface StripeProduct {
   };
 }
 
-export function useStripeProduct(): { product: StripeProduct | null, isLoading: boolean, error: Error | null } {
+export function useStripeProduct(productId?: string): { product: StripeProduct | null, isLoading: boolean, error: Error | null } {
   const [product, setProduct] = useState<StripeProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -26,8 +26,13 @@ export function useStripeProduct(): { product: StripeProduct | null, isLoading: 
     const fetchProduct = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/stripe/product');
-        if (!response.ok) throw new Error('Error al cargar el producto');
+        const url = productId ? `/api/stripe/product/${productId}` : '/api/stripe/product';
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Error al cargar el producto');
+        }
         
         const data = await response.json();
         setProduct(data);
@@ -40,7 +45,7 @@ export function useStripeProduct(): { product: StripeProduct | null, isLoading: 
     };
 
     fetchProduct();
-  }, []);
+  }, [productId]);
 
   return { product, isLoading, error };
 }

@@ -30,7 +30,6 @@ export function BannerImage({
         priority
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/90" />
     </div>
   );
 }
