@@ -12,7 +12,7 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   experimental: {
-    serverActions: true,
+    // serverActions ya está disponible por defecto en Next.js 14.2.3
   },
   typescript: {
     ignoreBuildErrors: false,
@@ -35,7 +35,17 @@ const nextConfig = {
   },
   publicRuntimeConfig: {
     port: 3022
-  }
+  },
+  // Excluir carpetas de ejemplo/referencia del build
+  webpack: (config, { isServer }) => {
+    // Excluir la carpeta reference_gallery
+    config.module.rules.push({
+      test: /reference_gallery/,
+      loader: 'ignore-loader',
+    });
+    
+    return config;
+  },
 };
 
 module.exports = nextConfig;

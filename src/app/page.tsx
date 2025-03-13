@@ -9,7 +9,6 @@ import ArrowRight from '@/components/icons/ArrowRight';
 import AliestGrowth from '@/components/AliestGrowth';
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { SimpleMeetingScheduler } from '@/components/Calendar/SimpleMeetingScheduler';
 
 const Page = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -79,7 +78,7 @@ const Page = () => {
                     Un Growth Business Developer es un profesional especializado en identificar y crear oportunidades de crecimiento para las empresas. Su rol abarca desde la planificación estratégica hasta la implementación de iniciativas que impulsan el desarrollo del negocio.
                   </p>
                   <blockquote className="border-l-4 border-blue-500 pl-4 my-8">
-                    <p className="text-lg italic text-gray-700 dark:text-gray-300">"Vamos a crear estrategias en el sector el Inmobiliario."</p>
+                    <p className="text-lg italic text-gray-700 dark:text-gray-300">&ldquo;Vamos a crear estrategias en el sector el Inmobiliario.&rdquo;</p>
                     <footer className="mt-2 text-sm text-gray-600 dark:text-gray-400">- Adriana Vargas</footer>
                   </blockquote>
                 </div>
