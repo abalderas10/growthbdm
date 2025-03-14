@@ -1,26 +1,30 @@
-"use client";
+'use client';
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from 'next-themes';
 
-const NextThemeProvider = dynamic(
-  () => import("next-themes").then((mod) => mod.ThemeProvider),
-  {
-    ssr: false,
-  }
-);
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1 minuto
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
-const queryClient = new QueryClient();
-
-export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <NextThemeProvider
+    <ThemeProvider
       attribute="class"
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </NextThemeProvider>
+    </ThemeProvider>
   );
-};
+}

@@ -16,26 +16,26 @@ export const RelatedPosts: FunctionComponent<{
   return (
     <div className="my-8">
       <div className="mb-6 text-lg font-semibold tracking-tight">
-        Related Posts
+        Artículos Relacionados
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {posts.slice(0, 3).map((post) => (
-          <div className=" bg-muted overflow-hidden rounded-lg" key={post.id}>
+          <div className="bg-muted overflow-hidden rounded-lg" key={post.id}>
             <Link href={`/blog/${post.slug}`}>
               <AspectRatio ratio={16 / 9} className="w-full">
                 <Image
                   src={post.image || "/images/placeholder.png"}
                   alt={post.title}
                   fill
-                  className="h -full min-h-full min-w-full object-cover object-center"
+                  className="h-full min-h-full min-w-full object-cover object-center"
                 />
               </AspectRatio>
             </Link>
             <div className="prose prose-sm dark:prose-invert p-4">
               <h3 className="line-clamp-2">{post.title}</h3>
               <p className="line-clamp-3">{post.description}</p>
-              <Link href={`/blog/${post.slug}`}>
-                <strong>Read Full Story</strong>
+              <Link href={`/blog/${post.slug}`} className="text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <strong>Leer Artículo Completo</strong>
               </Link>
             </div>
           </div>

@@ -1,16 +1,48 @@
 "use client";
 
 import Image from "next/image";
-import { SimpleMeetingScheduler } from "./Calendar/SimpleMeetingScheduler";
+import { Button } from "./ui/button";
+import { useEffect } from "react";
 
 export default function AliestGrowth() {
+  // Efecto para cargar el script de Cal.com
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cal.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  // Función para abrir el widget de Cal.com
+  const openCalModal = () => {
+    // @ts-ignore - Cal está disponible globalmente después de cargar el script
+    if (window.Cal) {
+      window.Cal.ui.openModal({
+        calLink: 'growthbdm/consulta-estrategica',
+        config: {
+          layout: 'month_view',
+          hideEventTypeDetails: false,
+          hideBranding: true,
+        }
+      });
+    } else {
+      console.error('Cal.com script not loaded');
+      // Fallback - abrir en una nueva pestaña si el script no cargó
+      window.open('https://cal.com/growthbdm/consulta-estrategica', '_blank');
+    }
+  };
+
   return (
     <section className="bg-white">
       {/* Efectos de fondo */}
       <div className="absolute inset-0 w-full bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
       </div>
-      <div className="absolute right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/10 to-transparent"></div>
+      <div className="absolute right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/10 to-transparent" />
 
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-7xl mx-auto">
@@ -71,7 +103,12 @@ export default function AliestGrowth() {
 
           {/* Botón de llamada a la acción */}
           <div className="text-center">
-            <SimpleMeetingScheduler />
+            <Button 
+              onClick={openCalModal}
+              className="px-8 py-6 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+            >
+              Agenda una consulta estratégica
+            </Button>
           </div>
         </div>
       </div>

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { FunctionComponent } from "react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "./ui/button";
-import { MinimalNewsletter } from './MinimalNewsletter';
 
 const Footer: FunctionComponent = () => {
   return (
@@ -23,13 +22,6 @@ const Footer: FunctionComponent = () => {
             </Link>
             <DarkModeToggle />
           </div>
-          <MinimalNewsletter />
-          <Link 
-            href="/admin" 
-            className="text-[10px] text-gray-400 hover:text-gray-500 dark:text-gray-600 dark:hover:text-gray-500 transition-colors mt-4"
-          >
-            Admin
-          </Link>
         </div>
       </div>
     </footer>

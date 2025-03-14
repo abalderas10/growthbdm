@@ -144,3 +144,8 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Ocultar la atribución de Wisp */
+[href*="wisp.blog"] {
+  display: none !important;
+}
