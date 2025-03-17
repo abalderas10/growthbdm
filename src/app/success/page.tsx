@@ -1,15 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 
+// Marcar explícitamente como página dinámica
+export const dynamic = 'force-dynamic';
+
 export default function Success() {
   const [countdown, setCountdown] = useState(10);
   const router = useRouter();
-  const { session_id: sessionId } = router.query || {};
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
     // Redirección automática después de 10 segundos

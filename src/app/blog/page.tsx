@@ -29,9 +29,9 @@ export default async function BlogPage({ searchParams }: PageProps) {
       <Header />
       <main className="relative">
         {/* Hero Section */}
-        <div className="relative overflow-hidden h-[400px]">
+        <div className="relative overflow-hidden h-[500px]">
           <ParticleNetwork />
-          <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
+          <div className="relative px-4 py-24 sm:px-6 sm:py-32 lg:py-40 lg:px-8">
             <h1 className="text-center text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
               Publicación Growth
             </h1>

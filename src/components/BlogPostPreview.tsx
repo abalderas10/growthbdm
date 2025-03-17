@@ -1,6 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Post } from "@wisp-cms/client";
+
+// Definir interfaz Post localmente en lugar de importarla
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  image: string | null;
+  publishedAt: Date | null;
+  createdAt: Date;
+  updatedAt?: Date;
+  teamId?: string;
+  authorId?: string;
+  author?: any; // Usar any para evitar problemas de compatibilidad
+  tags?: any[]; // Usar any[] para evitar problemas de compatibilidad
+}
 
 export const BlogPostsPreview = ({ posts }: { posts: Post[] }) => {
   return (
@@ -42,7 +57,7 @@ export const BlogPostsPreview = ({ posts }: { posts: Post[] }) => {
                 className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
               >
                 Leer más
-                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </Link>

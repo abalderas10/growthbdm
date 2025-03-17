@@ -35,6 +35,8 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "reference_gallery",
+    "reference_gallery/**/*"
   ]
 }

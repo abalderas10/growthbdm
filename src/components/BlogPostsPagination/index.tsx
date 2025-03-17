@@ -1,19 +1,45 @@
 'use client';
 
-import { Pagination } from "@wisp-cms/client";
 import Link from "next/link";
+
+// Definir interfaz Pagination localmente en lugar de importarla
+export interface Pagination {
+  // Propiedades que pueden venir del cliente Wisp
+  total?: number;
+  limit?: number | "all"; // Puede ser un número o la cadena "all"
+  page?: number;
+  currentPage?: number;
+  totalPages?: number;
+  // Otras propiedades que pueden venir del cliente Wisp
+  count?: number;
+  pageCount?: number;
+}
 
 interface BlogPostsPaginationProps {
   pagination: Pagination;
+  basePath?: string;
 }
 
-export const BlogPostsPagination = ({ pagination }: BlogPostsPaginationProps) => {
-  if (!pagination || pagination.total <= pagination.limit) {
+export const BlogPostsPagination = ({ 
+  pagination,
+  basePath = "/blog?page="
+}: BlogPostsPaginationProps) => {
+  // Si no hay paginación o solo hay una página, no mostrar nada
+  if (!pagination) {
     return null;
   }
 
-  const totalPages = Math.ceil(pagination.total / pagination.limit);
-  const currentPage = pagination.page;
+  // Calcular currentPage y totalPages si no están presentes
+  const currentPage = pagination.currentPage || pagination.page || 1;
+  const totalPages = pagination.totalPages || 
+                    (pagination.total && pagination.limit && pagination.limit !== "all"
+                      ? Math.ceil(pagination.total / pagination.limit) 
+                      : pagination.pageCount || 1);
+
+  // Si solo hay una página, no mostrar la paginación
+  if (totalPages <= 1) {
+    return null;
+  }
 
   // Generar array de páginas a mostrar
   const getPageNumbers = () => {
@@ -67,7 +93,7 @@ export const BlogPostsPagination = ({ pagination }: BlogPostsPaginationProps) =>
   return (
     <nav className="flex justify-center items-center space-x-2" aria-label="Paginación">
       <Link
-        href={`/blog?page=${currentPage - 1}`}
+        href={`${basePath}${currentPage - 1}`}
         className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
           currentPage === 1
             ? 'text-gray-400 cursor-not-allowed'
@@ -95,7 +121,7 @@ export const BlogPostsPagination = ({ pagination }: BlogPostsPaginationProps) =>
           return (
             <Link
               key={page}
-              href={`/blog?page=${page}`}
+              href={`${basePath}${page}`}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 currentPage === page
                   ? 'bg-blue-600 text-white'
@@ -110,7 +136,7 @@ export const BlogPostsPagination = ({ pagination }: BlogPostsPaginationProps) =>
       </div>
 
       <Link
-        href={`/blog?page=${currentPage + 1}`}
+        href={`${basePath}${currentPage + 1}`}
         className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
           currentPage === totalPages
             ? 'text-gray-400 cursor-not-allowed'

@@ -1,43 +1,40 @@
-import { prisma } from '@/lib/db';
-import { IUser } from '../models/user.model';
+import { User } from '../models/user.model';
+import type { User as IUser } from '@/types/user';
+import { connectDB } from '../mongoose';
 
 export class UserService {
   static async create(userData: Partial<IUser>) {
-    return await prisma.user.create({
-      data: userData as any,
-    });
+    await connectDB();
+    return await User.create(userData);
   }
 
   static async findById(id: string) {
-    return await prisma.user.findUnique({
-      where: { id },
-    });
+    await connectDB();
+    return await User.findById(id);
   }
 
   static async findByEmail(email: string) {
-    return await prisma.user.findUnique({
-      where: { email },
-    });
+    await connectDB();
+    return await User.findOne({ email });
   }
 
   static async update(id: string, updateData: Partial<IUser>) {
-    return await prisma.user.update({
-      where: { id },
-      data: updateData,
-    });
+    await connectDB();
+    return await User.findByIdAndUpdate(id, updateData, { new: true });
   }
 
-  static async updateBilling(id: string, billingData: Partial<IUser>) {
-    return await prisma.user.update({
-      where: { id },
-      data: { billing: billingData },
-    });
+  static async updateBilling(id: string, billingData: Partial<IUser['billing']>) {
+    await connectDB();
+    return await User.findByIdAndUpdate(
+      id, 
+      { $set: { billing: billingData } }, 
+      { new: true }
+    );
   }
 
   static async delete(id: string) {
-    return await prisma.user.delete({
-      where: { id },
-    });
+    await connectDB();
+    return await User.findByIdAndDelete(id);
   }
 
   static async list(options: {
@@ -52,69 +49,72 @@ export class UserService {
       limit = 10,
       status,
       search,
-      billingStatus
+      billingStatus,
     } = options;
 
-    const query: any = {};
+    await connectDB();
 
+    // Construir el filtro
+    const filter: any = {};
+    
     if (status) {
-      query.status = status;
+      filter.status = status;
     }
-
+    
     if (billingStatus) {
-      query.billing = { status: billingStatus };
+      filter['billing.status'] = billingStatus;
     }
-
+    
     if (search) {
-      query.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } },
-        { company: { contains: search, mode: 'insensitive' } },
-        { project: { contains: search, mode: 'insensitive' } }
+      // Búsqueda por nombre, email o empresa
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { company: { $regex: search, $options: 'i' } },
       ];
     }
 
-    const skip = (page - 1) * limit;
-
-    const [users, total] = await Promise.all([
-      prisma.user.findMany({
-        where: query,
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' }
-      }),
-      prisma.user.count({ where: query })
-    ]);
-
+    // Contar el total de documentos que coinciden con el filtro
+    const total = await User.countDocuments(filter);
+    
+    // Calcular el número de páginas
+    const totalPages = Math.ceil(total / limit);
+    
+    // Obtener los usuarios con paginación
+    const users = await User.find(filter)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+    
     return {
       users,
       pagination: {
         total,
         page,
-        pages: Math.ceil(total / limit)
-      }
+        limit,
+        totalPages,
+      },
     };
   }
 
   static async updateLoginTime(id: string) {
-    return await prisma.user.update({
-      where: { id },
-      data: { lastLoginAt: new Date() },
-    });
+    await connectDB();
+    return await User.findByIdAndUpdate(id, { lastLoginAt: new Date() }, { new: true });
   }
 
   static async getStats() {
+    await connectDB();
     const [
       totalUsers,
       activeUsers,
       pendingBilling,
       recentLogins
     ] = await Promise.all([
-      prisma.user.count(),
-      prisma.user.count({ where: { status: 'active' } }),
-      prisma.user.count({ where: { billing: { status: 'pending' } } }),
-      prisma.user.count({
-        where: { lastLoginAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } }
+      User.countDocuments(),
+      User.countDocuments({ status: 'active' }),
+      User.countDocuments({ 'billing.status': 'pending' }),
+      User.countDocuments({
+        lastLoginAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
       })
     ]);
 

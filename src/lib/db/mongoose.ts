@@ -1,15 +1,29 @@
 import mongoose from 'mongoose';
 
+// Definir la interfaz para la caché de mongoose
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
+// Extender el tipo global para incluir la cache de mongoose
+declare global {
+  // eslint-disable-next-line no-var
+  var mongooseCache: MongooseCache | undefined;
+}
+
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env');
 }
 
-let cached = global.mongoose;
+// Inicializar la caché
+const cached: MongooseCache = global.mongooseCache || { conn: null, promise: null };
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+// Asignar a global para persistencia entre recargas en desarrollo
+if (!global.mongooseCache) {
+  global.mongooseCache = cached;
 }
 
 export async function connectDB() {
@@ -22,8 +36,10 @@ export async function connectDB() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
+    // Ya hemos verificado que MONGODB_URI no es undefined al inicio del archivo
+    const uri = MONGODB_URI as string;
+    cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
+      return mongooseInstance;
     });
   }
 

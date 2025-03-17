@@ -1,6 +1,6 @@
 'use client';
 
-import { Post } from "@wisp-cms/client";
+import { Post } from "../BlogPostPreview";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";

@@ -1,26 +1,44 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+
+// Marcar explícitamente como página dinámica
+export const dynamic = 'force-dynamic';
 
 interface Reservation {
   date: string;
   time: string;
+  productName?: string;
+  customerEmail?: string;
+  customerName?: string;
 }
 
 export default function SuccessPage() {
   const router = useRouter();
-  const { session_id: sessionId } = router.query || {};
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get('session_id');
   const [isLoading, setIsLoading] = useState(true);
   const [reservation, setReservation] = useState<Reservation | null>(null);
 
   useEffect(() => {
     const verifyPayment = async () => {
       try {
-        if (!sessionId) return;
+        if (!sessionId) {
+          setIsLoading(false);
+          return;
+        }
+        
         const response = await fetch(`/api/reservations/verify?session_id=${sessionId}`);
+        
+        if (!response.ok) {
+          console.error('Error en la respuesta del servidor:', await response.text());
+          setIsLoading(false);
+          return;
+        }
+        
         const data = await response.json();
         setReservation(data.reservation);
       } catch (error) {
@@ -51,6 +69,7 @@ export default function SuccessPage() {
         {reservation && (
           <div className="text-muted-foreground mb-6">
             <p className="mb-2">Tu reservación ha sido confirmada.</p>
+            <p className="mb-2">Evento: {reservation.productName || 'Evento de Networking'}</p>
             <p className="mb-2">Fecha: {new Date(reservation.date).toLocaleDateString('es-ES')}</p>
             <p>Hora: {reservation.time}</p>
           </div>

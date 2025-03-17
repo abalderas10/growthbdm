@@ -12,6 +12,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { useStripeProduct } from "@/lib/hooks/useStripeProduct";
 import { loadStripe } from "@stripe/stripe-js";
 
+// Marcar explícitamente como página dinámica
+export const dynamic = 'force-dynamic';
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 const NETWORKING_EVENT = {
@@ -93,6 +96,14 @@ export default function NetworkingPage() {
     );
   }
 
+  // Valores predeterminados en caso de que el producto no se cargue correctamente
+  const eventName = product?.name || 'Evento de Networking';
+  const eventDescription = product?.description || 'Únete a nuestro exclusivo evento de networking para conectar con profesionales del sector inmobiliario.';
+  const eventDate = product?.metadata?.date || '8 de Mayo 2025';
+  const eventTime = product?.metadata?.time || '19:00 hrs';
+  const eventLocation = product?.metadata?.location || 'Torre Virreyes';
+  const eventImage = product?.images?.[0] || "https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt";
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -106,8 +117,8 @@ export default function NetworkingPage() {
             className="mb-24"
           >
             <BannerImage
-              src={product?.images?.[0] || "https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt"}
-              alt={product?.name || "Evento de Networking"}
+              src={eventImage}
+              alt={eventName}
               className="w-full h-[500px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl"
             />
           </motion.div>
@@ -120,10 +131,10 @@ export default function NetworkingPage() {
           >
             <motion.div variants={fadeInUp}>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-foreground">
-                {product?.name || 'Evento de Networking'}
+                {eventName}
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed">
-                {product?.description}
+                {eventDescription}
               </p>
             </motion.div>
 
@@ -133,15 +144,15 @@ export default function NetworkingPage() {
             >
               <div className="flex flex-col items-center space-y-4 p-6 rounded-xl bg-secondary/10">
                 <Calendar className="h-10 w-10 text-primary" />
-                <span className="text-lg">{product?.metadata?.date || '8 de Mayo 2025'}</span>
+                <span className="text-lg">{eventDate}</span>
               </div>
               <div className="flex flex-col items-center space-y-4 p-6 rounded-xl bg-secondary/10">
                 <Clock className="h-10 w-10 text-primary" />
-                <span className="text-lg">{product?.metadata?.time || '19:00 hrs'}</span>
+                <span className="text-lg">{eventTime}</span>
               </div>
               <div className="flex flex-col items-center space-y-4 p-6 rounded-xl bg-secondary/10">
                 <MapPin className="h-10 w-10 text-primary" />
-                <span className="text-lg">{product?.metadata?.location || 'Torre Virreyes'}</span>
+                <span className="text-lg">{eventLocation}</span>
               </div>
               <div className="flex flex-col items-center space-y-4 p-6 rounded-xl bg-secondary/10">
                 <Users className="h-10 w-10 text-primary" />
@@ -149,7 +160,7 @@ export default function NetworkingPage() {
               </div>
             </motion.div>
 
-            <motion.div variants={fadeInUp}>
+            <motion.div variants={fadeInUp} className="mt-8">
               <Button
                 onClick={handleCheckout}
                 disabled={isLoading}
@@ -164,8 +175,8 @@ export default function NetworkingPage() {
       </main>
 
       {/* Sección de galería con ancho completo */}
-      <section className="w-full bg-muted/30 border-y border-muted">
-        <div className="container mx-auto py-24 lg:py-32">
+      <section className="w-full bg-muted/30 border-y border-muted py-24 lg:py-32">
+        <div className="container mx-auto">
           <motion.div
             initial="hidden"
             animate="visible"

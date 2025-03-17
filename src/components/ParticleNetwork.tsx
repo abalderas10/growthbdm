@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Particle {
   x: number;
@@ -28,7 +28,7 @@ export const ParticleNetwork: React.FC = () => {
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
-      canvas.height = 400; // Altura fija para el hero section
+      canvas.height = 500; // Actualizado de 400px a 500px para coincidir con el hero section
     };
 
     const createParticles = () => {
@@ -45,11 +45,11 @@ export const ParticleNetwork: React.FC = () => {
 
     const drawParticles = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#3B82F6';
-      ctx.strokeStyle = '#3B82F6';
+      ctx.fillStyle = '#1E40AF';
+      ctx.strokeStyle = '#1E40AF';
 
       // Actualizar y dibujar partículas
-      particles.forEach((particle, i) => {
+      for (const particle of particles) {
         // Mover partículas
         particle.x += particle.vx;
         particle.y += particle.vy;
@@ -64,7 +64,7 @@ export const ParticleNetwork: React.FC = () => {
         ctx.fill();
 
         // Conectar partículas cercanas
-        particles.slice(i + 1).forEach(otherParticle => {
+        for (const otherParticle of particles.slice(particles.indexOf(particle) + 1)) {
           const dx = particle.x - otherParticle.x;
           const dy = particle.y - otherParticle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -77,7 +77,7 @@ export const ParticleNetwork: React.FC = () => {
             ctx.stroke();
             ctx.globalAlpha = 1;
           }
-        });
+        }
 
         // Interactuar con el mouse
         const dx = particle.x - mouseRef.current.x;
@@ -91,7 +91,7 @@ export const ParticleNetwork: React.FC = () => {
           ctx.stroke();
           ctx.globalAlpha = 1;
         }
-      });
+      }
 
       animationFrameId = requestAnimationFrame(drawParticles);
     };
