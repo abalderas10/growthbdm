@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
+// Marcar explícitamente como ruta dinámica
+export const dynamic = 'force-dynamic';
+
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY must be defined');
 }
@@ -19,8 +22,13 @@ export async function POST(request: Request) {
   try {
     console.log('Received request to create checkout session');
     
-    const { priceId } = await request.json();
-    console.log('Price ID received:', priceId);
+    const body = await request.json();
+    const { priceId, successUrl, cancelUrl, customerEmail } = body as {
+      priceId: string;
+      successUrl: string;
+      cancelUrl: string;
+      customerEmail: string;
+    };
 
     if (!priceId) {
       console.error('No price ID provided');
@@ -34,10 +42,10 @@ export async function POST(request: Request) {
     try {
       const price = await stripe.prices.retrieve(priceId);
       console.log('Price found:', price.id);
-    } catch (priceErr: any) {
+    } catch (priceErr: unknown) {
       console.error('Error retrieving price:', priceErr);
       return NextResponse.json(
-        { error: { message: `Invalid price ID: ${priceErr.message}` } },
+        { error: { message: `Invalid price ID: ${priceErr as Error}.message` } },
         { status: 400 }
       );
     }
@@ -56,8 +64,8 @@ export async function POST(request: Request) {
         },
       ],
       mode: mode as Stripe.Checkout.SessionCreateParams.Mode,
-      success_url: 'https://growthbdm.vercel.app/success?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'https://growthbdm.vercel.app/construye-alianzas',
+      success_url: successUrl || 'https://growthbdm.vercel.app/success?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: cancelUrl || 'https://growthbdm.vercel.app/construye-alianzas',
       billing_address_collection: 'required',
       allow_promotion_codes: true,
       locale: 'es',
@@ -66,17 +74,23 @@ export async function POST(request: Request) {
     console.log('Checkout session created:', session.id);
 
     return NextResponse.json({ sessionId: session.id });
-  } catch (err: any) {
-    console.error('Error creating checkout session:', err);
+  } catch (error: unknown) {
+    console.error('Error creating checkout session:', error);
+    
+    if (error instanceof Stripe.errors.StripeError) {
+      return NextResponse.json(
+        { error: `Stripe error: ${error.message}` },
+        { status: error.statusCode || 500 }
+      );
+    }
+
     return NextResponse.json(
       { 
         error: { 
-          message: err.message || 'Error creating checkout session',
-          code: err.code,
-          type: err.type
+          message: error instanceof Error ? error.message : 'Error creating checkout session'
         } 
       },
-      { status: err.statusCode || 500 }
+      { status: 500 }
     );
   }
 }

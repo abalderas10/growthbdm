@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
+// Marcar explícitamente como ruta dinámica
+export const dynamic = 'force-dynamic';
+
 // Verificar que la clave de API existe
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error('STRIPE_SECRET_KEY no está configurada');

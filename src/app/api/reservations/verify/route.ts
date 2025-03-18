@@ -1,6 +1,9 @@
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 
+// Marcar explícitamente como ruta dinámica
+export const dynamic = 'force-dynamic';
+
 // Verificar que la clave de API existe
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error('STRIPE_SECRET_KEY no está configurada');
@@ -49,38 +52,26 @@ export async function GET(request: Request) {
     const lineItems = session.line_items?.data || [];
     const productName = lineItems[0]?.description || 'Evento';
     
-    // Crear un objeto de reservación con la información disponible
-    const reservation = {
-      date: new Date().toISOString(), // Fecha actual como fallback
-      time: '19:00', // Hora por defecto
-      productName,
-      customerEmail: session.customer_details?.email,
-      customerName: session.customer_details?.name,
-    };
-
-    console.log('Reservación verificada:', reservation);
-
-    return NextResponse.json({
+    // Construir la respuesta con la información de la sesión
+    const responseData = {
       success: true,
-      reservation,
       session: {
         id: session.id,
-        customer: session.customer,
         paymentStatus: session.payment_status,
-        amountTotal: session.amount_total,
-        currency: session.currency
+        amountTotal: session.amount_total ? session.amount_total / 100 : 0, // Convertir de centavos a la moneda base
+        currency: session.currency?.toUpperCase(),
+        customerEmail: session.customer_details?.email || '',
+        customerName: session.customer_details?.name || '',
+        productName: productName,
+        createdAt: new Date(session.created * 1000).toISOString(), // Convertir timestamp a fecha
       }
-    });
+    };
+
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error('Error al verificar la sesión:', error);
-    if (error instanceof Stripe.errors.StripeError) {
-      return NextResponse.json(
-        { error: `Error de Stripe: ${error.message}` },
-        { status: 500 }
-      );
-    }
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { error: 'Error al verificar la sesión de pago' },
       { status: 500 }
     );
   }

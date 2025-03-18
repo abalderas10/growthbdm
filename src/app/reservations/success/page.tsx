@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -16,7 +16,8 @@ interface Reservation {
   customerName?: string;
 }
 
-export default function SuccessPage() {
+// Componente que usa useSearchParams envuelto en Suspense
+function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
@@ -53,34 +54,70 @@ export default function SuccessPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
+        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Verificando tu reservación...</h2>
+        <p className="text-muted-foreground">Estamos confirmando los detalles de tu pago.</p>
+      </div>
+    );
+  }
+
+  if (!reservation && sessionId) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
+        <div className="bg-destructive/10 p-4 rounded-lg mb-6">
+          <h2 className="text-2xl font-bold mb-2 text-destructive">No pudimos verificar tu reservación</h2>
+          <p className="text-muted-foreground">Hubo un problema al verificar los detalles de tu pago. Por favor, contacta a soporte.</p>
+        </div>
+        <Link href="/networking" className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium">
+          Volver a la página de networking
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-card p-8 rounded-lg shadow-lg text-center">
-        <CheckCircle className="w-16 h-16 text-primary mx-auto mb-6" />
-        <h1 className="text-2xl font-bold text-foreground mb-4">
-          ¡Reservación Exitosa!
-        </h1>
-        {reservation && (
-          <div className="text-muted-foreground mb-6">
-            <p className="mb-2">Tu reservación ha sido confirmada.</p>
-            <p className="mb-2">Evento: {reservation.productName || 'Evento de Networking'}</p>
-            <p className="mb-2">Fecha: {new Date(reservation.date).toLocaleDateString('es-ES')}</p>
-            <p>Hora: {reservation.time}</p>
-          </div>
-        )}
-        <Link 
-          href="/"
-          className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
-        >
-          Volver al inicio
-        </Link>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
+      <div className="bg-green-50 dark:bg-green-950/30 p-8 rounded-xl shadow-lg max-w-2xl w-full mb-8">
+        <div className="flex justify-center mb-6">
+          <CheckCircle className="w-20 h-20 text-green-500" />
+        </div>
+        <h1 className="text-3xl font-bold text-center mb-6">¡Reservación Confirmada!</h1>
+        <p className="text-lg text-center mb-8">
+          Gracias por reservar tu lugar en nuestro evento de networking. Hemos enviado los detalles a tu correo electrónico.
+        </p>
+        <div className="border-t border-b border-gray-200 dark:border-gray-700 py-4 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Detalles de la Reservación:</h2>
+          {reservation && (
+            <div className="space-y-2">
+              <p><span className="font-medium">Evento:</span> {reservation.productName || 'Networking Growth BDM'}</p>
+              <p><span className="font-medium">Fecha:</span> {new Date(reservation.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p><span className="font-medium">Hora:</span> {reservation.time}</p>
+              {reservation.customerName && <p><span className="font-medium">Nombre:</span> {reservation.customerName}</p>}
+              {reservation.customerEmail && <p><span className="font-medium">Email:</span> {reservation.customerEmail}</p>}
+            </div>
+          )}
+        </div>
+        <div className="flex justify-center">
+          <Link href="/" className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium">
+            Volver al inicio
+          </Link>
+        </div>
       </div>
     </div>
+  );
+}
+
+// Componente principal que envuelve el contenido en Suspense
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
+        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Cargando...</h2>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }

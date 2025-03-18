@@ -2,6 +2,9 @@ import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
 import { cloudinaryConfig } from '@/lib/config/cloudinary';
 
+// Marcar explícitamente como ruta dinámica
+export const dynamic = 'force-dynamic';
+
 if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
   throw new Error('Faltan las credenciales de Cloudinary');
 }
