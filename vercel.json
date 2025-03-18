@@ -3,5 +3,17 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}",
+      "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}",
+      "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}",
+      "CLOUDINARY_API_KEY": "${CLOUDINARY_API_KEY}",
+      "CLOUDINARY_API_SECRET": "${CLOUDINARY_API_SECRET}"
+    }
+  }
 }
