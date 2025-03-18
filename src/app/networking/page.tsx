@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { BannerImage } from "@/components/BannerImage";
-import { ImageGallery } from '@/components/ImageGallery';
-import { Button } from "@/components/ui/button";
+// Importaciones absolutas para evitar problemas de resolución
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { BannerImage } from "../../components/BannerImage";
+import { ImageGallery } from '../../components/ImageGallery';
+import { Button } from "../../components/ui/button";
 import { Calendar, MapPin, Users, Clock } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { useStripeProduct } from "@/lib/hooks/useStripeProduct";
+import { useToast } from "../../components/ui/use-toast";
+import { useStripeProduct } from "../../lib/hooks/useStripeProduct";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Marcar explícitamente como página dinámica
