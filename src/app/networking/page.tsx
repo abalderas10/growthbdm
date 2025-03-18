@@ -166,7 +166,7 @@ export default function NetworkingPage() {
                 onClick={handleCheckout}
                 disabled={isLoading}
                 size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 text-xl px-12 py-8 h-auto rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+                className="bg-blue-800 text-white hover:bg-blue-900 dark:bg-blue-700 dark:hover:bg-blue-800 text-xl px-12 py-8 h-auto rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
                 {isLoading ? 'Procesando...' : 'Reservar Lugar'}
               </Button>
