@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -9,7 +9,8 @@ import { CheckCircle } from 'lucide-react';
 // Marcar explícitamente como página dinámica
 export const dynamic = 'force-dynamic';
 
-export default function Success() {
+// Componente que usa useSearchParams
+function SuccessContent() {
   const [countdown, setCountdown] = useState(10);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -90,5 +91,23 @@ export default function Success() {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+// Componente principal con Suspense
+export default function Success() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 flex items-center justify-center px-4">
+        <div className="max-w-2xl w-full bg-card rounded-xl shadow-lg p-8 text-center">
+          <div className="mx-auto mb-6">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          </div>
+          <h1 className="text-3xl font-bold mb-4">Cargando...</h1>
+        </div>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }
