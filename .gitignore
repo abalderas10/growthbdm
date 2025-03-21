@@ -54,4 +54,8 @@ next-env.d.ts
 ehthumbs.db
 Thumbs.db
 
+# build logs
+build_log*.txt
+build-log*.txt
+
 .vercel
