@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3077';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://localhost:3077';
     console.log('URL base:', baseUrl);
 
     // Configuración base de la sesión
