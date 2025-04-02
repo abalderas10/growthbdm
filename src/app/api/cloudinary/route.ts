@@ -32,22 +32,6 @@ export async function GET() {
     // Verificar si hay resultados
     if (!results || !results.resources || results.resources.length === 0) {
       console.warn('No se encontraron imágenes en la carpeta especificada');
-      
-      // Intentar con una búsqueda más amplia si no hay resultados
-      console.log('Intentando búsqueda alternativa...');
-      const alternativeResults = await cloudinary.search
-        .expression('resource_type:image')
-        .sort_by('created_at', 'desc')
-        .with_field('context')
-        .max_results(cloudinaryConfig.maxResults)
-        .execute();
-        
-      console.log(`Resultados alternativos: ${alternativeResults.resources?.length || 0} imágenes`);
-      
-      if (alternativeResults.resources && alternativeResults.resources.length > 0) {
-        return NextResponse.json(alternativeResults);
-      }
-      
       return NextResponse.json(
         { resources: [], total_count: 0 },
         { status: 200 }
