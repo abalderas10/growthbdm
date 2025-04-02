@@ -9,6 +9,7 @@ import { useCloudinaryGallery } from '@/lib/hooks/useCloudinaryGallery';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RefreshCw } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
 const container = {
   hidden: { opacity: 0 },
@@ -34,7 +35,7 @@ export function ImageGallery() {
       <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" aria-label="Cargando galería">
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton
-            key={`gallery-skeleton-${i}`}
+            key={`gallery-skeleton-${uuidv4()}`}
             className="aspect-[4/3] rounded-xl bg-primary/5"
           />
         ))}
@@ -47,14 +48,25 @@ export function ImageGallery() {
     return (
       <section className="flex flex-col items-center justify-center p-8 rounded-xl bg-destructive/5 text-destructive" aria-label="Error de galería">
         <p className="text-lg font-semibold mb-4">Error al cargar la galería</p>
-        <Button
-          variant="outline"
-          onClick={() => refetch()}
-          className="border-destructive/20 hover:bg-destructive/10"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
-          Intentar de nuevo
-        </Button>
+        <p className="text-sm text-center mb-4">
+          {error instanceof Error ? error.message : 'No se pudieron cargar las imágenes. Por favor, intenta nuevamente.'}
+        </p>
+        <div className="flex gap-4 mt-2">
+          <Button
+            variant="outline"
+            onClick={() => refetch()}
+            className="border-destructive/20 hover:bg-destructive/10"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
+            Intentar de nuevo
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => window.location.reload()}
+          >
+            Recargar página
+          </Button>
+        </div>
       </section>
     );
   }
