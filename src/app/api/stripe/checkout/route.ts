@@ -26,8 +26,13 @@ export async function POST(request: Request) {
     // Usar HTTP para localhost (desarrollo) y HTTPS para producción
     const isDevelopment = process.env.NODE_ENV === 'development';
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                   (isDevelopment ? 'http://localhost:3077' : 'https://growthbdm.com');
-    console.log('URL base:', baseUrl);
+                   (isDevelopment ? 'http://localhost:3077' : 'https://www.growthbdm.com');
+    
+    // Asegurarse de que las URLs de redirección sean absolutas y tengan el protocolo correcto
+    const successUrl = new URL('/success', baseUrl).toString();
+    const cancelUrl = new URL('/construye-alianzas', baseUrl).toString();
+    
+    console.log('URLs de redirección:', { successUrl, cancelUrl });
 
     // Configuración base de la sesión
     const sessionConfig: Stripe.Checkout.SessionCreateParams = {
@@ -39,8 +44,8 @@ export async function POST(request: Request) {
         },
       ],
       mode: mode as Stripe.Checkout.SessionCreateParams.Mode,
-      success_url: `${baseUrl}/success`,
-      cancel_url: `${baseUrl}/construye-alianzas`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       allow_promotion_codes: true,
       locale: 'es',
       currency: 'mxn',
@@ -67,7 +72,7 @@ export async function POST(request: Request) {
     try {
       const session = await stripe.checkout.sessions.create(sessionConfig);
       console.log('Sesión creada exitosamente:', session.id);
-      return Response.json({ sessionId: session.id });
+      return Response.json({ sessionId: session.id, url: session.url });
     } catch (stripeError) {
       if (stripeError instanceof Stripe.errors.StripeError) {
         console.error('Error de Stripe al crear la sesión:', stripeError.message);

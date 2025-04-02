@@ -87,20 +87,28 @@ export default function ConstruyeAlianzas() {
         throw new Error(data.error || 'Error al crear la sesión de checkout');
       }
 
-      if (!data.sessionId) {
+      console.log('Respuesta de checkout:', data);
+      
+      // Verificar si tenemos una URL directa de Stripe
+      if (data.url) {
+        // Usar la URL directa proporcionada por Stripe (método más confiable)
+        console.log('Redirigiendo a URL directa de Stripe:', data.url);
+        window.location.href = data.url;
+      } else if (data.sessionId) {
+        // Método de respaldo usando redirectToCheckout
+        console.log('Redirigiendo a checkout con sessionId:', data.sessionId);
+        
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: data.sessionId
+        });
+
+        if (error) {
+          console.error('Error en redirectToCheckout:', error);
+          throw new Error(error.message);
+        }
+      } else {
         console.error('Respuesta inválida del servidor:', data);
         throw new Error('Respuesta inválida del servidor');
-      }
-
-      console.log('Redirigiendo a checkout con sessionId:', data.sessionId);
-      
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId
-      });
-
-      if (error) {
-        console.error('Error en redirectToCheckout:', error);
-        throw new Error(error.message);
       }
     } catch (error) {
       console.error('Error detallado al procesar el pago:', error);

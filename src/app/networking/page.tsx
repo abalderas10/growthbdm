@@ -63,10 +63,18 @@ export default function NetworkingPage() {
       const data = await response.json();
       
       if (!response.ok) throw new Error(data.error || 'Error al crear la sesión de checkout');
-      if (!data.sessionId) throw new Error('Respuesta inválida del servidor');
-
-      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-      if (error) throw error;
+      
+      // Verificar si tenemos una URL directa de Stripe
+      if (data.url) {
+        // Usar la URL directa proporcionada por Stripe (método más confiable)
+        window.location.href = data.url;
+      } else if (data.sessionId) {
+        // Método de respaldo usando redirectToCheckout
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+        if (error) throw error;
+      } else {
+        throw new Error('Respuesta inválida del servidor');
+      }
     } catch (error) {
       console.error('Error al procesar el pago:', error);
       toast({

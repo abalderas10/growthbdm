@@ -5,11 +5,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from "@/components/ui/button";
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { CalendarDays, MapPin, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+// Inicializar Stripe de manera segura
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+  : Promise.resolve(null);
 
 const reservationSchema = z.object({
   name: z.string().min(2, 'El nombre es requerido'),
@@ -95,27 +98,35 @@ export default function ReservationForm() {
 
       // Si no hay código de invitación válido, proceder con el pago
       if (codeStatus !== 'valid') {
-        const stripe = await stripePromise;
-        if (!stripe) {
-          throw new Error('Error al cargar Stripe');
-        }
-        
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: result.sessionId,
-        });
+        // Verificar si tenemos una URL directa de Stripe
+        if (result.url) {
+          // Usar la URL directa proporcionada por Stripe (método más confiable)
+          window.location.href = result.url;
+        } else {
+          // Método de respaldo usando redirectToCheckout
+          const stripe = await stripePromise;
+          if (!stripe) {
+            throw new Error('Error al cargar Stripe');
+          }
+          
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: result.sessionId,
+          });
 
-        if (error) {
-          throw new Error(error.message);
+          if (error) {
+            throw new Error(error.message);
+          }
         }
       } else {
         // Redireccionar directamente a la página de éxito
         window.location.href = `/reservations/success?session_id=${result.sessionId}`;
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error:', error);
-      setError(error.message || 'Error al procesar la reservación');
-      toast.error(error.message || 'Error al procesar la reservación');
+      const errorMessage = error instanceof Error ? error.message : 'Error al procesar la reservación';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
