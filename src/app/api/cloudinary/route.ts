@@ -7,27 +7,36 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
 
-// Configuración de Cloudinary con credenciales de respaldo
-cloudinary.config(cloudinaryCredentials);
+// Configuración de Cloudinary con credenciales
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'de4dpzh9c',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 
 export async function GET() {
   try {
     console.log('Iniciando búsqueda en Cloudinary');
     console.log(`Carpeta configurada: ${cloudinaryConfig.folder}`);
     console.log(`Cloud name: ${cloudinary.config().cloud_name}`);
-    console.log(`API Key disponible: ${!!cloudinary.config().api_key}`);
-    console.log(`API Secret disponible: ${!!cloudinary.config().api_secret}`);
     
     // Verificar credenciales
-    if (!cloudinary.config().api_key || !cloudinary.config().api_secret) {
-      console.error('Credenciales de Cloudinary no configuradas correctamente');
+    if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.error('Credenciales de Cloudinary no configuradas en variables de entorno');
       return NextResponse.json(
         { 
           error: 'Error de configuración de Cloudinary', 
-          details: 'Credenciales no configuradas correctamente',
+          details: 'Credenciales no configuradas en variables de entorno',
           timestamp: new Date().toISOString()
         },
-        { status: 500 }
+        { 
+          status: 500,
+          headers: {
+            'Cache-Control': 'no-store, max-age=0',
+            'Surrogate-Control': 'no-store',
+          }
+        }
       );
     }
     
@@ -46,7 +55,13 @@ export async function GET() {
       console.warn('No se encontraron imágenes en la carpeta especificada');
       return NextResponse.json(
         { resources: [], total_count: 0 },
-        { status: 200 }
+        { 
+          status: 200,
+          headers: {
+            'Cache-Control': 'no-store, max-age=0',
+            'Surrogate-Control': 'no-store',
+          }
+        }
       );
     }
 
