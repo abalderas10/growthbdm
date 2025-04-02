@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { useEffect, useState, useCallback } from "react";
 import { Target, Handshake, TrendingUp, BarChart } from "lucide-react";
 import { useToast } from "./ui/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogClose } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogClose, DialogTitle } from "./ui/dialog";
 import { X } from "lucide-react";
 
 export default function AliestGrowth() {
@@ -94,6 +94,7 @@ export default function AliestGrowth() {
       {/* Modal del calendario */}
       <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
         <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden p-0">
+          <DialogTitle className="sr-only">Calendario de citas</DialogTitle>
           <div>
             <iframe 
               src="https://cal.com/alberto-balderas/30min?embed=true&hideBranding=true&hideFooter=true&borderless=true&theme=light&layout=month_view" 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useCloudinaryGallery } from '@/lib/hooks/useCloudinaryGallery';
@@ -136,6 +136,7 @@ export function ImageGallery() {
 
       <Dialog open={selectedImage !== null} onOpenChange={() => setSelectedImage(null)}>
         <DialogContent className="max-w-7xl max-h-[90vh] p-0 bg-black/95">
+          <DialogTitle className="sr-only">Galería de imágenes de eventos</DialogTitle>
           <Button
             variant="ghost"
             size="icon"

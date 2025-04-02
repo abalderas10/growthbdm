@@ -7,7 +7,7 @@ import Footer from "../../components/Footer";
 import { Button } from "../../components/ui/button";
 import { motion, useInView as useFramerInView } from "framer-motion";
 import { useToast } from "../../components/ui/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogClose } from "../../components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogClose, DialogTitle } from "../../components/ui/dialog";
 import { X } from "lucide-react";
 import ContactForm from "../../components/ContactForm";
 import { Check, Zap, Globe, Shield, Brain } from "lucide-react";
@@ -487,6 +487,7 @@ export default function ConstruyeAlianzas() {
 
       <Dialog open={showCalendar} onOpenChange={setShowCalendar}>
         <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden p-0">
+          <DialogTitle className="sr-only">Calendario de citas</DialogTitle>
           <div>
             <iframe 
               src="https://cal.com/alberto-balderas/30min?embed=true&hideBranding=true&hideFooter=true&borderless=true&theme=light&layout=month_view" 
