@@ -1,23 +1,35 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
-import { cloudinaryConfig } from '@/lib/config/cloudinary';
+import { cloudinaryConfig, cloudinaryCredentials } from '@/lib/config/cloudinary';
 
-// Marcar explícitamente como ruta dinámica
+// Marcar explícitamente como ruta dinámica para evitar el cacheo en producción
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
-// Configuración de Cloudinary
-cloudinary.config({
-  cloud_name: 'de4dpzh9c', // Hardcodeado para asegurar que funcione
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-});
+// Configuración de Cloudinary con credenciales de respaldo
+cloudinary.config(cloudinaryCredentials);
 
 export async function GET() {
   try {
     console.log('Iniciando búsqueda en Cloudinary');
     console.log(`Carpeta configurada: ${cloudinaryConfig.folder}`);
     console.log(`Cloud name: ${cloudinary.config().cloud_name}`);
+    console.log(`API Key disponible: ${!!cloudinary.config().api_key}`);
+    console.log(`API Secret disponible: ${!!cloudinary.config().api_secret}`);
+    
+    // Verificar credenciales
+    if (!cloudinary.config().api_key || !cloudinary.config().api_secret) {
+      console.error('Credenciales de Cloudinary no configuradas correctamente');
+      return NextResponse.json(
+        { 
+          error: 'Error de configuración de Cloudinary', 
+          details: 'Credenciales no configuradas correctamente',
+          timestamp: new Date().toISOString()
+        },
+        { status: 500 }
+      );
+    }
     
     // Ejecutar la búsqueda en Cloudinary
     const results = await cloudinary.search
@@ -38,7 +50,13 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json(results);
+    // Añadir headers para evitar el cacheo
+    return NextResponse.json(results, {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+        'Surrogate-Control': 'no-store',
+      }
+    });
   } catch (error) {
     console.error('Error detallado al obtener imágenes de Cloudinary:', error);
     
@@ -53,7 +71,13 @@ export async function GET() {
         details: errorMessage,
         timestamp: new Date().toISOString()
       },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Cache-Control': 'no-store, max-age=0',
+          'Surrogate-Control': 'no-store',
+        }
+      }
     );
   }
 }

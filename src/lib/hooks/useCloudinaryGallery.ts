@@ -4,7 +4,17 @@ import type { CloudinaryImage } from '@/lib/types/cloudinary';
 async function fetchCloudinaryImages(): Promise<CloudinaryImage[]> {
   try {
     console.log('Iniciando solicitud a API de Cloudinary');
-    const response = await fetch('/api/cloudinary');
+    
+    // Añadir timestamp para evitar el cacheo en el navegador
+    const timestamp = new Date().getTime();
+    const response = await fetch(`/api/cloudinary?t=${timestamp}`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -42,12 +52,13 @@ export function useCloudinaryGallery() {
     error,
     refetch
   } = useQuery<CloudinaryImage[], Error>({
-    queryKey: ['cloudinaryImages'],
+    queryKey: ['cloudinaryImages', new Date().toISOString().slice(0, 10)], // Incluir fecha para forzar refresco diario
     queryFn: fetchCloudinaryImages,
     staleTime: 1000 * 60 * 5, // 5 minutos
     refetchOnWindowFocus: false,
-    retry: 2,
+    retry: 3, // Aumentar el número de reintentos
     retryDelay: (attemptIndex) => Math.min(1000 * (2 ** attemptIndex), 10000),
+    gcTime: 1000 * 60 * 10, // 10 minutos
   });
 
   return {
