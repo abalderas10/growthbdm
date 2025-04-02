@@ -131,6 +131,7 @@ export function ImageGallery() {
             onClick={() => setSelectedImage(null)}
             aria-label="Cerrar galería"
           >
+            <span className="sr-only">Cerrar galería</span>
             <X className="h-6 w-6" />
           </Button>
           
@@ -167,6 +168,7 @@ export function ImageGallery() {
                   onClick={() => setSelectedImage(selectedImage - 1)}
                   aria-label="Imagen anterior"
                 >
+                  <span className="sr-only">Imagen anterior</span>
                   <ChevronLeft className="h-8 w-8" />
                 </Button>
               )}
@@ -179,6 +181,7 @@ export function ImageGallery() {
                   onClick={() => setSelectedImage(selectedImage + 1)}
                   aria-label="Siguiente imagen"
                 >
+                  <span className="sr-only">Siguiente imagen</span>
                   <ChevronRight className="h-8 w-8" />
                 </Button>
               )}

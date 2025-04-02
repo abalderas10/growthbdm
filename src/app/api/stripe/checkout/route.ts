@@ -23,7 +23,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://localhost:3077';
+    // Usar HTTP para localhost (desarrollo) y HTTPS para producción
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                   (isDevelopment ? 'http://localhost:3077' : 'https://growthbdm.com');
     console.log('URL base:', baseUrl);
 
     // Configuración base de la sesión

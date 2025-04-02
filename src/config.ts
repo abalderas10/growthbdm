@@ -7,8 +7,12 @@ const buildConfig = () => {
     process.env.NEXT_DEFAULT_METADATA_DEFAULT_TITLE || "Travel with Samantha";
   const defaultDescription = process.env.NEXT_PUBLIC_BLOG_DESCRIPTION || "Blog about travel and lifestyle.";
 
+  // Usar HTTP para localhost (desarrollo) y HTTPS para producción
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const defaultBaseUrl = isDevelopment ? "http://localhost:3000" : "https://growthbdm.com";
+
   return {
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000",
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || defaultBaseUrl,
     blog: {
       name,
       copyright,
