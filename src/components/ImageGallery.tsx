@@ -45,28 +45,40 @@ export function ImageGallery() {
   }
 
   if (error) {
+    // Mostrar un mensaje más amigable para errores de configuración
+    const isConfigError = error instanceof Error && 
+      (error.message.includes('configuración') || 
+       error.message.includes('credenciales') ||
+       error.message.includes('Error al cargar las imágenes: 500'));
+    
     return (
-      <section className="flex flex-col items-center justify-center p-8 rounded-xl bg-destructive/5 text-destructive" aria-label="Error de galería">
-        <p className="text-lg font-semibold mb-4">Error al cargar la galería</p>
-        <p className="text-sm text-center mb-4">
-          {error instanceof Error ? error.message : 'No se pudieron cargar las imágenes. Por favor, intenta nuevamente.'}
+      <section className="flex flex-col items-center justify-center p-8 rounded-xl bg-secondary/10" aria-label="Galería en mantenimiento">
+        <p className="text-lg font-semibold mb-4 text-primary">
+          {isConfigError ? 'Galería en mantenimiento' : 'Error al cargar la galería'}
         </p>
-        <div className="flex gap-4 mt-2">
-          <Button
-            variant="outline"
-            onClick={() => refetch()}
-            className="border-destructive/20 hover:bg-destructive/10"
-          >
-            <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
-            Intentar de nuevo
-          </Button>
-          <Button
-            variant="default"
-            onClick={() => window.location.reload()}
-          >
-            Recargar página
-          </Button>
-        </div>
+        <p className="text-sm text-center mb-4 text-muted-foreground">
+          {isConfigError 
+            ? 'Estamos trabajando para mostrar las imágenes de eventos anteriores pronto.' 
+            : (error instanceof Error ? error.message : 'No se pudieron cargar las imágenes. Por favor, intenta nuevamente.')}
+        </p>
+        {!isConfigError && (
+          <div className="flex gap-4 mt-2">
+            <Button
+              variant="outline"
+              onClick={() => refetch()}
+              className="border-primary/20 hover:bg-primary/10"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
+              Intentar de nuevo
+            </Button>
+            <Button
+              variant="default"
+              onClick={() => window.location.reload()}
+            >
+              Recargar página
+            </Button>
+          </div>
+        )}
       </section>
     );
   }

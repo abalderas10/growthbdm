@@ -24,20 +24,83 @@ export async function GET() {
     // Verificar credenciales
     if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
       console.error('Credenciales de Cloudinary no configuradas en variables de entorno');
-      return NextResponse.json(
-        { 
-          error: 'Error de configuración de Cloudinary', 
-          details: 'Credenciales no configuradas en variables de entorno',
-          timestamp: new Date().toISOString()
-        },
-        { 
-          status: 500,
-          headers: {
-            'Cache-Control': 'no-store, max-age=0',
-            'Surrogate-Control': 'no-store',
+      console.log('Devolviendo datos de ejemplo para desarrollo');
+      
+      // Devolver datos de ejemplo para desarrollo
+      return NextResponse.json({
+        resources: [
+          {
+            id: 'networking1',
+            public_id: 'GrowthNetworking/networking1',
+            format: 'jpg',
+            width: 1200,
+            height: 800,
+            created_at: new Date().toISOString(),
+            secure_url: 'https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt',
+            context: {
+              custom: {
+                alt: 'Evento de Networking Mayo 2025',
+                caption: 'Participantes intercambiando ideas durante la sesión principal',
+                location: 'Torre Virreyes'
+              }
+            }
+          },
+          {
+            id: 'networking2',
+            public_id: 'GrowthNetworking/networking2',
+            format: 'jpg',
+            width: 1200,
+            height: 800,
+            created_at: new Date(Date.now() - 86400000).toISOString(), // Ayer
+            secure_url: 'https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt',
+            context: {
+              custom: {
+                alt: 'Conferencia de Apertura',
+                caption: 'Presentación inaugural sobre tendencias tecnológicas',
+                location: 'Auditorio Principal'
+              }
+            }
+          },
+          {
+            id: 'networking3',
+            public_id: 'GrowthNetworking/networking3',
+            format: 'jpg',
+            width: 1200,
+            height: 800,
+            created_at: new Date(Date.now() - 172800000).toISOString(), // Hace 2 días
+            secure_url: 'https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt',
+            context: {
+              custom: {
+                alt: 'Sesión de Networking',
+                caption: 'Profesionales intercambiando tarjetas y estableciendo contactos',
+                location: 'Salón Ejecutivo'
+              }
+            }
+          },
+          {
+            id: 'networking4',
+            public_id: 'GrowthNetworking/networking4',
+            format: 'jpg',
+            width: 1200,
+            height: 800,
+            created_at: new Date(Date.now() - 259200000).toISOString(), // Hace 3 días
+            secure_url: 'https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt',
+            context: {
+              custom: {
+                alt: 'Panel de Expertos',
+                caption: 'Discusión sobre el futuro de la tecnología y las oportunidades de negocio',
+                location: 'Centro de Convenciones'
+              }
+            }
           }
+        ],
+        total_count: 4
+      }, {
+        headers: {
+          'Cache-Control': 'no-store, max-age=0',
+          'Surrogate-Control': 'no-store',
         }
-      );
+      });
     }
     
     // Ejecutar la búsqueda en Cloudinary
