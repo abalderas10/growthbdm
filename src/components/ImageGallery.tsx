@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useCloudinaryGallery } from '@/lib/hooks/useCloudinaryGallery';
+import { useMixedGallery } from '@/lib/hooks/useMixedGallery';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RefreshCw } from 'lucide-react';
@@ -27,7 +27,7 @@ const item = {
 };
 
 export function ImageGallery() {
-  const { images, isLoading, error, refetch } = useCloudinaryGallery();
+  const { images, isLoading, error, refetch, isUsingFallback } = useMixedGallery();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
   if (isLoading) {
@@ -44,7 +44,9 @@ export function ImageGallery() {
     );
   }
 
-  if (error) {
+  // Si hay un error pero estamos usando imágenes de respaldo, no mostramos el error
+  // porque tenemos las imágenes de respaldo para mostrar
+  if (error && !isUsingFallback) {
     // Mostrar un mensaje más amigable para errores de configuración
     const isConfigError = error instanceof Error && 
       (error.message.includes('configuración') || 
@@ -114,7 +116,10 @@ export function ImageGallery() {
               aria-label={`Ver imagen: ${image.context?.alt || 'Imagen de evento'}`}
             >
               <Image
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,g_auto,w_800,h_600,q_85/${image.public_id}.${image.format}`}
+                src={isUsingFallback 
+                  ? `/images/networking/fallback-${parseInt(image.id.split('-')[1])}.jpg`
+                  : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,g_auto,w_800,h_600,q_85/${image.public_id}.${image.format}`
+                }
                 alt={image.context?.alt || 'Imagen de evento'}
                 className="object-cover transition-transform duration-300 group-hover:scale-110"
                 fill
@@ -163,7 +168,10 @@ export function ImageGallery() {
           {selectedImage !== null && (
             <div className="relative w-full h-[85vh]">
               <Image
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,g_auto,w_1920,h_1080,q_90/${images[selectedImage].public_id}.${images[selectedImage].format}`}
+                src={isUsingFallback 
+                  ? `/images/networking/fallback-${parseInt(images[selectedImage].id.split('-')[1])}.jpg`
+                  : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,g_auto,w_1920,h_1080,q_90/${images[selectedImage].public_id}.${images[selectedImage].format}`
+                }
                 alt={images[selectedImage].context?.alt || `Imagen de evento ${selectedImage + 1}`}
                 className="object-contain"
                 fill
