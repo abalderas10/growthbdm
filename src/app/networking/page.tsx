@@ -113,26 +113,40 @@ export default function NetworkingPage() {
   let eventDate = '8 de Mayo 2025';
   let eventTime = '19:00 hrs';
   
+  // Mostrar todos los metadatos para depuración
+  console.log('Todos los metadatos del producto:', product?.metadata);
+  
+  // Procesar la fecha y hora del evento
   if (product?.metadata?.event_date) {
-    // Intentar formatear la fecha si está en formato ISO
-    try {
-      const dateObj = new Date(product.metadata.event_date);
-      if (!isNaN(dateObj.getTime())) {
-        // Formatear la fecha para mostrar
-        const day = dateObj.getDate();
-        const month = dateObj.toLocaleString('es-ES', { month: 'long' });
-        const year = dateObj.getFullYear();
-        eventDate = `${day} de ${month} ${year}`;
-        
-        // Formatear la hora
-        const hours = dateObj.getHours();
-        const minutes = dateObj.getMinutes();
-        eventTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes} hrs`;
+    console.log('Valor original de event_date:', product.metadata.event_date);
+    
+    // Método directo: extraer manualmente la fecha y hora
+    const dateParts = product.metadata.event_date.split('T');
+    if (dateParts.length === 2) {
+      // Extraer la fecha (YYYY-MM-DD)
+      const [year, month, day] = dateParts[0].split('-').map(Number);
+      
+      // Nombres de los meses en español
+      const monthNames = [
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+      ];
+      
+      if (year && month && day) {
+        eventDate = `${day} de ${monthNames[month-1]} ${year}`;
+        console.log('Fecha extraída manualmente:', eventDate);
       }
-    } catch (e) {
-      console.error('Error al formatear la fecha:', e);
-      // Si hay un error, usar el valor original
-      eventDate = product?.metadata?.event_date || eventDate;
+      
+      // Extraer la hora (H:MM:SS)
+      const timeParts = dateParts[1].split(':');
+      if (timeParts.length >= 2) {
+        const hours = parseInt(timeParts[0]);
+        const minutes = parseInt(timeParts[1]);
+        if (!isNaN(hours) && !isNaN(minutes)) {
+          eventTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes} hrs`;
+          console.log('Hora extraída manualmente:', eventTime);
+        }
+      }
     }
   } else if (product?.metadata?.date) {
     eventDate = product.metadata.date;
