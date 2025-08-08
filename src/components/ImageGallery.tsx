@@ -117,7 +117,7 @@ export function ImageGallery() {
             >
               <Image
                 src={isUsingFallback 
-                  ? `/images/networking/fallback-${parseInt(image.id.split('-')[1])}.jpg`
+                  ? `/images/networking/${image.id}.jpg`
                   : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,g_auto,w_800,h_600,q_85/${image.public_id}.${image.format}`
                 }
                 alt={image.context?.alt || 'Imagen de evento'}
@@ -169,7 +169,7 @@ export function ImageGallery() {
             <div className="relative w-full h-[85vh]">
               <Image
                 src={isUsingFallback 
-                  ? `/images/networking/fallback-${parseInt(images[selectedImage].id.split('-')[1])}.jpg`
+                  ? `/images/networking/${images[selectedImage].id}.jpg`
                   : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,g_auto,w_1920,h_1080,q_90/${images[selectedImage].public_id}.${images[selectedImage].format}`
                 }
                 alt={images[selectedImage].context?.alt || `Imagen de evento ${selectedImage + 1}`}
