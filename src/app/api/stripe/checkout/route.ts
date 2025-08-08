@@ -25,14 +25,35 @@ export async function POST(request: Request) {
 
     // Usar HTTP para localhost (desarrollo) y HTTPS para producción
     const isDevelopment = process.env.NODE_ENV === 'development';
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                   (isDevelopment ? 'http://localhost:3077' : 'https://www.growthbdm.com');
+    
+    // Determinar la URL base correcta
+    // Si estamos en desarrollo local y accediendo desde localhost, usar el puerto correcto
+    const currentUrl = request.headers.get('referer') || '';
+    const isLocalhost = currentUrl.includes('localhost');
+    
+    let baseUrl;
+    if (isDevelopment && isLocalhost) {
+      // Extraer el puerto del referer si está disponible
+      const localhostMatch = currentUrl.match(/localhost:(\d+)/);
+      const port = localhostMatch ? localhostMatch[1] : '3022'; // Puerto por defecto
+      baseUrl = `http://localhost:${port}`;
+    } else {
+      baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+              (isDevelopment ? 'http://localhost:3022' : 'https://www.growthbdm.com');
+    }
     
     // Asegurarse de que las URLs de redirección sean absolutas y tengan el protocolo correcto
     const successUrl = new URL('/success', baseUrl).toString();
-    const cancelUrl = new URL('/construye-alianzas', baseUrl).toString();
     
-    console.log('URLs de redirección:', { successUrl, cancelUrl });
+    // Determinar la URL de cancelación basada en el producto
+    let cancelUrl;
+    if (productId === 'prod_Rqxdf37ruTalZu') { // ID del producto de networking
+      cancelUrl = new URL('/networking', baseUrl).toString();
+    } else {
+      cancelUrl = new URL('/construye-alianzas', baseUrl).toString();
+    }
+    
+    console.log('URLs de redirección:', { successUrl, cancelUrl, productId, baseUrl, isLocalhost: currentUrl.includes('localhost') });
 
     // Configuración base de la sesión
     const sessionConfig: Stripe.Checkout.SessionCreateParams = {
