@@ -33,9 +33,12 @@ export function useStripeProduct(productId?: string): { product: StripeProduct |
           const errorData = await response.json().catch(() => ({}));
           console.error('Error en la respuesta de la API:', errorData);
           
-          // Si estamos en desarrollo, proporcionar datos de ejemplo
-          if (process.env.NODE_ENV === 'development') {
-            console.log('Usando datos de ejemplo para desarrollo');
+          // Intentar obtener datos reales incluso en desarrollo
+          console.error('Error en la respuesta de la API, intentando obtener datos reales:', errorData);
+          
+          // Solo usar datos de ejemplo como último recurso si no hay otra opción
+          if (process.env.NODE_ENV === 'development' && (errorData.error === 'API key not configured' || errorData.error === 'Stripe not initialized')) {
+            console.log('No se pueden obtener datos reales, usando datos de ejemplo como último recurso');
             
             // Si es el producto específico que el usuario actualizó
             if (productId === 'prod_Rqxdf37ruTalZu') {
