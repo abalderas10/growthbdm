@@ -102,10 +102,10 @@ export async function GET(
       name: product.name,
       description: product.description,
       images: product.images,
-      metadata: {
-        date: product.metadata.date || '8 de Mayo 2025',
-        location: product.metadata.location || 'Torre Virreyes',
-        time: product.metadata.time || '19:00 hrs',
+      metadata: product.metadata || {
+        date: '8 de Mayo 2025',
+        location: 'Torre Virreyes',
+        time: '19:00 hrs',
       },
       price: {
         id: price.id,

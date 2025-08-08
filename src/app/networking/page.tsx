@@ -108,8 +108,40 @@ export default function NetworkingPage() {
   // Valores predeterminados en caso de que el producto no se cargue correctamente
   const eventName = product?.name || 'Evento de Networking';
   const eventDescription = product?.description || 'Únete a nuestro exclusivo evento de networking para conectar con profesionales del sector inmobiliario.';
-  const eventDate = product?.metadata?.date || '8 de Mayo 2025';
-  const eventTime = product?.metadata?.time || '19:00 hrs';
+  
+  // Extraer fecha y hora del campo event_date o usar valores predeterminados
+  let eventDate = '8 de Mayo 2025';
+  let eventTime = '19:00 hrs';
+  
+  if (product?.metadata?.event_date) {
+    // Intentar formatear la fecha si está en formato ISO
+    try {
+      const dateObj = new Date(product.metadata.event_date);
+      if (!isNaN(dateObj.getTime())) {
+        // Formatear la fecha para mostrar
+        const day = dateObj.getDate();
+        const month = dateObj.toLocaleString('es-ES', { month: 'long' });
+        const year = dateObj.getFullYear();
+        eventDate = `${day} de ${month} ${year}`;
+        
+        // Formatear la hora
+        const hours = dateObj.getHours();
+        const minutes = dateObj.getMinutes();
+        eventTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes} hrs`;
+      }
+    } catch (e) {
+      console.error('Error al formatear la fecha:', e);
+      // Si hay un error, usar el valor original
+      eventDate = product?.metadata?.event_date || eventDate;
+    }
+  } else if (product?.metadata?.date) {
+    eventDate = product.metadata.date;
+  }
+  
+  if (product?.metadata?.time && !product?.metadata?.event_date) {
+    eventTime = product.metadata.time;
+  }
+  
   const eventLocation = product?.metadata?.location || 'Torre Virreyes';
   const eventImage = product?.images?.[0] || "https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt";
 
