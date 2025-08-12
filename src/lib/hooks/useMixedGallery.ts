@@ -14,15 +14,17 @@ export function useMixedGallery() {
   const [isUsingFallback, setIsUsingFallback] = useState(false);
 
   useEffect(() => {
-    // Si hay imágenes de Cloudinary, úsalas
-    if (cloudinaryImages && cloudinaryImages.length > 0) {
+    // Si hay imágenes de Cloudinary y no hay errores, úsalas
+    if (cloudinaryImages && cloudinaryImages.length > 0 && !error) {
+      console.log('Usando imágenes de Cloudinary:', cloudinaryImages.length);
       setMixedImages(cloudinaryImages);
       setIsUsingFallback(false);
       return;
     }
 
     // Si hay un error o no hay imágenes, usa las imágenes de respaldo
-    if (error || (cloudinaryImages && cloudinaryImages.length === 0)) {
+    if (error || !cloudinaryImages || cloudinaryImages.length === 0) {
+      console.log('Usando imágenes de respaldo debido a:', error ? 'error' : 'sin imágenes');
       // Transformar las imágenes de respaldo para que tengan la estructura correcta
       const fallbackImages = fallbackGalleryImages.map((image) => ({
         ...image,

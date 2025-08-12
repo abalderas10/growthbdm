@@ -6,6 +6,8 @@
 import { CloudinaryImage } from '../types/cloudinary';
 
 // Nombres de archivos de imágenes en la carpeta public/images/networking
+// Asegúrate de que estos archivos existan en la carpeta public/images/networking
+// tanto en desarrollo como en producción
 const networkingImageFiles = [
   'PA100270.jpg',
   'PA100278.jpg',
@@ -20,6 +22,9 @@ const networkingImageFiles = [
   'PA100329.jpg',
   'PA100330.jpg',
 ];
+
+// Imagen de respaldo por defecto en caso de que fallen todas las demás
+export const DEFAULT_IMAGE = 'https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt';
 
 // Imágenes de respaldo para la galería
 export const fallbackGalleryImages: CloudinaryImage[] = networkingImageFiles.map((filename, index) => ({

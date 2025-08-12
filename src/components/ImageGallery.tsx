@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RefreshCw } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
+import { DEFAULT_IMAGE } from '@/lib/data/fallbackGalleryImages';
 
 const container = {
   hidden: { opacity: 0 },
@@ -126,6 +127,17 @@ export function ImageGallery() {
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 priority={index < 4}
                 quality={85}
+                onError={(e) => {
+                  // Si la imagen falla, intentar cargar la imagen de respaldo
+                  const imgElement = e.currentTarget;
+                  if (!imgElement.src.includes('/images/networking/')) {
+                    console.log(`Fallback para imagen: ${image.id}`);
+                    imgElement.src = `/images/networking/${image.id}.jpg`;
+                  } else {
+                    // Si también falla la imagen de respaldo, usar una imagen por defecto
+                    imgElement.src = DEFAULT_IMAGE;
+                  }
+                }}
               />
               <div 
                 className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -178,6 +190,17 @@ export function ImageGallery() {
                 priority
                 quality={90}
                 sizes="90vw"
+                onError={(e) => {
+                  // Si la imagen falla, intentar cargar la imagen de respaldo
+                  const imgElement = e.currentTarget;
+                  if (!imgElement.src.includes('/images/networking/')) {
+                    console.log(`Fallback para imagen modal: ${images[selectedImage].id}`);
+                    imgElement.src = `/images/networking/${images[selectedImage].id}.jpg`;
+                  } else {
+                    // Si también falla la imagen de respaldo, usar una imagen por defecto
+                    imgElement.src = DEFAULT_IMAGE;
+                  }
+                }}
               />
               
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent text-white p-4">
