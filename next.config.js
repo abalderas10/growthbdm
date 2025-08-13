@@ -24,7 +24,7 @@ const nextConfig = {
   // Marcar todas las rutas de API como dinámicas
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3022', 'growthbdm.vercel.app']
+      allowedOrigins: ['localhost:3022', 'www.growthbdm.com', 'growthbdm.com']
     }
   }
 };
