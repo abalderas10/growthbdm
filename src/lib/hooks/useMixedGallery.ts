@@ -32,8 +32,11 @@ export function useMixedGallery() {
         created_at: new Date().toISOString(),
       }));
       
-      setMixedImages(fallbackImages);
-      setIsUsingFallback(true);
+      // Solo actualizar si realmente estamos cambiando a fallback
+      if (!isUsingFallback) {
+        setMixedImages(fallbackImages);
+        setIsUsingFallback(true);
+      }
     }
   }, [cloudinaryImages, error]);
 
