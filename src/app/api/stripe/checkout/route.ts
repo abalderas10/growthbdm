@@ -38,8 +38,8 @@ export async function POST(request: Request) {
       const port = localhostMatch ? localhostMatch[1] : '3022'; // Puerto por defecto
       baseUrl = `http://localhost:${port}`;
     } else {
-      baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-              (isDevelopment ? 'http://localhost:3022' : 'https://www.growthbdm.com');
+      // En producción, siempre usar growthbdm.com para evitar problemas con vercel.app
+      baseUrl = isDevelopment ? 'http://localhost:3022' : 'https://www.growthbdm.com';
     }
     
     // Asegurarse de que las URLs de redirección sean absolutas y tengan el protocolo correcto
