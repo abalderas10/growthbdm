@@ -396,7 +396,7 @@ export default function NetworkingPage() {
                 className="relative aspect-[4/3] group overflow-hidden rounded-xl"
               >
                 <Image
-                  src={`/images/networking/${imageId}.jpg`}
+                  src={`https://www.growthbdm.com/images/networking/${imageId}.JPG`}
                   alt={`Evento de networking Growth BDM ${index + 1}`}
                   className="object-cover transition-transform duration-300 group-hover:scale-110"
                   fill
