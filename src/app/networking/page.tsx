@@ -38,6 +38,21 @@ const staggerContainer = {
   }
 };
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
 export default function NetworkingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -243,7 +258,7 @@ export default function NetworkingPage() {
               <div className="text-center mb-10">
                 <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Save the Date</h3>
                 <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground text-center">
-                  Evento de Promoción de MIPIM
+                  Evento de Promoción MIPIM
                 </h2>
                 <div className="w-24 h-1 bg-blue-500 mx-auto mb-6"></div>
               </div>
@@ -261,12 +276,12 @@ export default function NetworkingPage() {
               
               <div className="flex justify-center mb-10">
                 <a 
-                  href="https://www.inversionmeridiana.com/es/Ferias/mipim" 
+                  href="https://www.mipim.com/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-lg"
                 >
-                  Visitar sitio web de la feria Meridiana
+                  Visitar sitio web de la feria MIPIM
                 </a>
               </div>
               
@@ -357,7 +372,66 @@ export default function NetworkingPage() {
             </p>
           </motion.div>
 
-          <ImageGallery />
+          {/* Galería de imágenes específicas */}
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-10"
+          >
+            {[
+              'PA100270',
+              'PA100278',
+              'PA100285',
+              'PA100293',
+              'PA100297',
+              'PA100302',
+              'PA100311',
+              'PA100313'
+            ].map((imageId, index) => (
+              <motion.div
+                key={imageId}
+                variants={item}
+                className="relative aspect-[4/3] group overflow-hidden rounded-xl"
+              >
+                <Image
+                  src={`/images/networking/${imageId}.jpg`}
+                  alt={`Evento de networking Growth BDM ${index + 1}`}
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  priority={index < 4}
+                  quality={85}
+                />
+                <div 
+                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  aria-hidden="true"
+                >
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <p className="text-white text-sm truncate">
+                      Workshop Networking
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Enlace a la galería completa */}
+          <motion.div
+            variants={fadeInUp}
+            className="flex justify-center"
+          >
+            <a 
+              href="https://workshop.growthbdm.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-lg flex items-center gap-2"
+            >
+              <span>Ver galería completa</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+            </a>
+          </motion.div>
         </div>
       </section>
 
