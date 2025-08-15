@@ -297,7 +297,7 @@ export default function ConstruyeAlianzas() {
                   </div>
                   <h3 className="text-2xl font-bold mb-4">AliEst Growth</h3>
                   <div className="mb-6">
-                    <span className="text-4xl font-bold">$20,000</span>
+                    <span className="text-4xl font-bold">$6,500</span>
                     <span className="text-gray-600 dark:text-blue-200/80"> MXN/mes</span>
                   </div>
                   <p className="text-gray-600 dark:text-blue-200/80 mb-6">
