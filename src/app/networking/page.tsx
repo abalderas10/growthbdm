@@ -248,88 +248,171 @@ export default function NetworkingPage() {
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="max-w-4xl mx-auto mt-24 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/30 p-10 rounded-2xl border-2 border-blue-300 dark:border-blue-700 shadow-lg overflow-hidden relative"
+            className="max-w-5xl mx-auto mt-24 bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 dark:from-blue-900/60 dark:via-blue-950/50 dark:to-indigo-900/60 p-12 rounded-3xl border border-blue-300 dark:border-blue-700 shadow-2xl overflow-hidden relative"
           >
-            {/* Elemento decorativo */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-blue-200 dark:bg-blue-800/30 rounded-full -mr-20 -mt-20 z-0 opacity-50"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-200 dark:bg-indigo-800/30 rounded-full -ml-16 -mb-16 z-0 opacity-50"></div>
+            {/* Elementos decorativos animados */}
+            <motion.div 
+              animate={{ 
+                rotate: 360,
+                transition: { duration: 40, repeat: Infinity, ease: "linear" } 
+              }}
+              className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-200 to-blue-300/50 dark:from-blue-800/40 dark:to-blue-700/20 rounded-full -mr-20 -mt-20 z-0 opacity-60 blur-md"
+            ></motion.div>
+            <motion.div 
+              animate={{ 
+                rotate: -360,
+                transition: { duration: 50, repeat: Infinity, ease: "linear" } 
+              }}
+              className="absolute bottom-0 left-0 w-56 h-56 bg-gradient-to-tr from-indigo-200 to-indigo-300/50 dark:from-indigo-800/40 dark:to-indigo-700/20 rounded-full -ml-20 -mb-20 z-0 opacity-60 blur-md"
+            ></motion.div>
+            <motion.div 
+              animate={{ 
+                y: [0, 15, 0],
+                transition: { duration: 6, repeat: Infinity, ease: "easeInOut" } 
+              }}
+              className="absolute top-1/4 left-10 w-24 h-24 bg-blue-300/30 dark:bg-blue-700/30 rounded-full z-0 opacity-40"
+            ></motion.div>
+            <motion.div 
+              animate={{ 
+                y: [0, -15, 0],
+                transition: { duration: 7, repeat: Infinity, ease: "easeInOut" } 
+              }}
+              className="absolute bottom-1/3 right-10 w-20 h-20 bg-indigo-300/30 dark:bg-indigo-700/30 rounded-full z-0 opacity-40"
+            ></motion.div>
             
             <motion.div variants={fadeInUp} className="relative z-10">
-              {/* Encabezado con estilo Save the Date */}
-              <div className="text-center mb-10">
-                <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">Save the Date</h3>
-                <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground text-center">
-                  Evento de Promoción MIPIM
-                </h2>
-                <div className="w-24 h-1 bg-blue-500 mx-auto mb-6"></div>
-              </div>
-              
-              {/* Fecha destacada */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md text-center mb-10 transform hover:scale-105 transition-transform duration-300 border border-blue-200 dark:border-blue-700">
-                <Calendar className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-                <h3 className="text-2xl font-bold text-blue-800 dark:text-blue-300 mb-1">10 de Septiembre, 2025</h3>
-                <p className="text-xl text-blue-600 dark:text-blue-400">8:30 a.m.</p>
-              </div>
-              
-              <p className="text-lg text-center text-muted-foreground mb-8 leading-relaxed">
-                Te invitamos a conocer MIPIM, la principal feria inmobiliaria del mundo, que se llevará a cabo del 9 al 13 de marzo en Cannes, Francia.
-              </p>
-              
-              <div className="flex justify-center mb-10">
-                <a 
-                  href="https://www.mipim.com/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-lg"
+              {/* Encabezado con estilo Save the Date mejorado */}
+              <div className="text-center mb-12">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="inline-block bg-gradient-to-r from-blue-600/20 to-indigo-600/20 dark:from-blue-400/20 dark:to-indigo-400/20 px-8 py-3 rounded-full mb-6 border border-blue-300/50 dark:border-blue-500/30 shadow-inner"
                 >
-                  Visitar sitio web de la feria MIPIM
-                </a>
+                  <h3 className="text-xl font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Save the Date</h3>
+                </motion.div>
+                <motion.h2 
+                  whileHover={{ scale: 1.02 }}
+                  className="text-4xl md:text-6xl font-extrabold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-700 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-400 drop-shadow-sm"
+                >
+                  Evento de Promoción MIPIM
+                </motion.h2>
+                <div className="w-48 h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 mx-auto mb-8 rounded-full shadow-sm"></div>
               </div>
               
-              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl shadow-md mb-8 border border-blue-100 dark:border-blue-800">
-                <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-300 mb-4 text-center">Organizado por</h3>
-                <p className="text-lg text-center text-muted-foreground mb-6">
+              {/* Fecha destacada mejorada con animación */}
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/30 rounded-2xl p-10 shadow-xl text-center mb-12 transition-all duration-300 border border-blue-200 dark:border-blue-700/50 backdrop-blur-sm"
+              >
+                <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+                  <motion.div 
+                    whileHover={{ rotate: 10 }}
+                    className="bg-gradient-to-br from-blue-100 to-blue-200/70 dark:from-blue-800/50 dark:to-blue-700/30 p-6 rounded-2xl w-24 h-24 flex items-center justify-center shadow-lg border border-blue-200/50 dark:border-blue-600/30 mb-4 md:mb-0"
+                  >
+                    <Calendar className="h-12 w-12 text-blue-700 dark:text-blue-300" />
+                  </motion.div>
+                  
+                  <div className="text-center md:text-left">
+                    <div className="inline-block bg-blue-100/50 dark:bg-blue-900/30 px-4 py-1 rounded-full mb-3">
+                      <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Marca en tu calendario</span>
+                    </div>
+                    <h3 className="text-4xl font-extrabold text-blue-800 dark:text-blue-300 mb-3 drop-shadow-sm">10 de Septiembre, 2025</h3>
+                    <p className="text-2xl text-blue-600 dark:text-blue-400 font-semibold flex items-center justify-center md:justify-start gap-2">
+                      <Clock className="h-5 w-5" /> 8:30 a.m.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <div className="relative mb-10 p-6 bg-blue-50/70 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 shadow-inner">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">Información del evento</div>
+                <p className="text-lg text-center text-muted-foreground mb-8 leading-relaxed mt-4">
+                  Te invitamos a conocer MIPIM, la principal feria inmobiliaria del mundo, que se llevará a cabo del 9 al 13 de marzo en Cannes, Francia.
+                </p>
+              
+                <div className="flex justify-center mb-6">
+                  <motion.a 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    href="https://www.mipim.com/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl text-lg flex items-center gap-3 group"
+                  >
+                    <span>Visitar sitio web de la feria MIPIM</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-200"><path d="M7 17l9.2-9.2M17 17V7H7"></path></svg>
+                  </motion.a>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/20 backdrop-blur-sm p-8 rounded-2xl shadow-lg mb-10 border border-blue-100 dark:border-blue-800">
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-blue-300 dark:to-blue-700"></div>
+                  <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-300 px-4">Organizado por</h3>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-blue-300 dark:to-blue-700"></div>
+                </div>
+                
+                <p className="text-lg text-center text-muted-foreground mb-8 font-medium">
                   Aliest-Growth y How2go
                 </p>
                 
-                <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-300 mb-4 text-center">Ponentes Destacados</h3>
-                <ul className="space-y-4 text-lg text-muted-foreground mb-6 list-none">
-                  <li className="p-3 border-b border-gray-100 dark:border-gray-700 flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full mr-3 mt-1">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-blue-300 dark:to-blue-700"></div>
+                  <h3 className="text-xl font-semibold text-blue-800 dark:text-blue-300 px-4">Ponentes Destacados</h3>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-blue-300 dark:to-blue-700"></div>
+                </div>
+                
+                <ul className="space-y-5 text-lg text-muted-foreground mb-6 list-none">
+                  <motion.li 
+                    whileHover={{ x: 5 }}
+                    className="p-4 border-l-4 border-blue-400 dark:border-blue-600 bg-white/60 dark:bg-gray-800/60 rounded-r-lg shadow-sm flex items-start hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full mr-4 mt-1 shadow-inner">
+                      <div className="w-3 h-3 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
                     </div>
                     <div>
-                      <span className="font-semibold text-blue-700 dark:text-blue-300">Luis Méndez Trillo</span>, Presidente de Coldwell Banker Commercial
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Mercado inmobiliario de oficinas e industrial y oportunidades de inversión</p>
+                      <span className="font-semibold text-blue-700 dark:text-blue-300 text-lg">Luis Méndez Trillo</span>, Presidente de Coldwell Banker Commercial
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Mercado inmobiliario de oficinas e industrial y oportunidades de inversión</p>
                     </div>
-                  </li>
-                  <li className="p-3 border-b border-gray-100 dark:border-gray-700 flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full mr-3 mt-1">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-blue-700 dark:text-blue-300">Hines</span>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Trayectoria como desarrollador inmobiliario en México, retos y proyectos actuales</p>
-                    </div>
-                  </li>
-                  <li className="p-3 border-b border-gray-100 dark:border-gray-700 flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full mr-3 mt-1">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  </motion.li>
+                  
+                  <motion.li 
+                    whileHover={{ x: 5 }}
+                    className="p-4 border-l-4 border-blue-400 dark:border-blue-600 bg-white/60 dark:bg-gray-800/60 rounded-r-lg shadow-sm flex items-start hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full mr-4 mt-1 shadow-inner">
+                      <div className="w-3 h-3 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
                     </div>
                     <div>
-                      <span className="font-semibold text-blue-700 dark:text-blue-300">Mtra. Diana León</span>, Titular de Energía de la Secretaría de Economía
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Proyectos energéticos en el país y su impacto en el crecimiento de la industria nacional</p>
+                      <span className="font-semibold text-blue-700 dark:text-blue-300 text-lg">Hines</span>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Trayectoria como desarrollador inmobiliario en México, retos y proyectos actuales</p>
                     </div>
-                  </li>
-                  <li className="p-3 border-b border-gray-100 dark:border-gray-700 flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full mr-3 mt-1">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  </motion.li>
+                  
+                  <motion.li 
+                    whileHover={{ x: 5 }}
+                    className="p-4 border-l-4 border-blue-400 dark:border-blue-600 bg-white/60 dark:bg-gray-800/60 rounded-r-lg shadow-sm flex items-start hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full mr-4 mt-1 shadow-inner">
+                      <div className="w-3 h-3 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
                     </div>
                     <div>
-                      <span className="font-semibold text-blue-700 dark:text-blue-300">Gobierno del Estado de Oaxaca</span>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Oportunidades de inversión del Corredor Interoceánico y desarrollo económico regional</p>
+                      <span className="font-semibold text-blue-700 dark:text-blue-300 text-lg">Mtra. Diana León</span>, Titular de Energía de la Secretaría de Economía
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Proyectos energéticos en el país y su impacto en el crecimiento de la industria nacional</p>
                     </div>
-                  </li>
+                  </motion.li>
+                  
+                  <motion.li 
+                    whileHover={{ x: 5 }}
+                    className="p-4 border-l-4 border-blue-400 dark:border-blue-600 bg-white/60 dark:bg-gray-800/60 rounded-r-lg shadow-sm flex items-start hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full mr-4 mt-1 shadow-inner">
+                      <div className="w-3 h-3 bg-blue-500 dark:bg-blue-400 rounded-full"></div>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-blue-700 dark:text-blue-300 text-lg">Gobierno del Estado de Oaxaca</span>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Oportunidades de inversión del Corredor Interoceánico y desarrollo económico regional</p>
+                    </div>
+                  </motion.li>
                 </ul>
               </div>
               
