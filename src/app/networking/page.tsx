@@ -517,18 +517,16 @@ export default function NetworkingPage() {
               href="https://workshop.growthbdm.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="transition-all duration-300 hover:opacity-90 hover:scale-105 transform shadow-lg hover:shadow-xl rounded-xl overflow-hidden"
+              className="transition-all duration-300 hover:scale-105 transform shadow-lg hover:shadow-xl rounded-xl overflow-hidden block"
             >
-              <div className="relative w-[300px] h-[150px] group">
+              <div className="relative w-[300px] group">
                 <Image 
-                  src="/images/networking/PA100350.jpg" 
-                  alt="WorkShop Inteligencia Artificial" 
-                  fill 
-                  className="object-cover"
+                  src="/workshop_click.png" 
+                  alt="Workshop Inteligencia Artificial" 
+                  width={300}
+                  height={150}
+                  className="object-contain rounded-xl"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center p-4">
-                  <span className="text-white text-lg font-medium">WorkShop Inteligencia Artificial</span>
-                </div>
               </div>
             </a>
           </motion.div>
