@@ -508,7 +508,7 @@ export default function NetworkingPage() {
             ))}
           </motion.div>
 
-          {/* Enlace a la galería completa */}
+          {/* Enlace a la galería completa (ahora con imagen) */}
           <motion.div
             variants={fadeInUp}
             className="flex justify-center"
@@ -517,10 +517,19 @@ export default function NetworkingPage() {
               href="https://workshop.growthbdm.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-lg flex items-center gap-2"
+              className="transition-all duration-300 hover:opacity-90 hover:scale-105 transform shadow-lg hover:shadow-xl rounded-xl overflow-hidden"
             >
-              <span>WorkShop Inteligencia Artificial</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+              <div className="relative w-[300px] h-[150px] group">
+                <Image 
+                  src="/images/networking/PA100350.jpg" 
+                  alt="WorkShop Inteligencia Artificial" 
+                  fill 
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center p-4">
+                  <span className="text-white text-lg font-medium">WorkShop Inteligencia Artificial</span>
+                </div>
+              </div>
             </a>
           </motion.div>
         </div>
