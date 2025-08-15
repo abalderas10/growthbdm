@@ -403,6 +403,13 @@ export default function NetworkingPage() {
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   priority={index < 4}
                   quality={85}
+                  onError={(e) => {
+                    // Ocultar el elemento padre cuando la imagen no carga
+                    const target = e.target as HTMLImageElement;
+                    if (target.parentElement) {
+                      target.parentElement.style.display = 'none';
+                    }
+                  }}
                 />
                 <div 
                   className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
