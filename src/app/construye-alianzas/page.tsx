@@ -123,7 +123,7 @@ export default function ConstruyeAlianzas() {
   };
 
   const handleSubscription = () => handleCheckout(
-    'price_1QwDX6P1CcAYKMEzAHOPsdSD',
+    'price_1RwEitP1CcAYKMEz1taohzys',
     'prod_RptJzpgYz5FXOe',
     'subscription'
   );
