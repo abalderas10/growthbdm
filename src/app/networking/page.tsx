@@ -436,7 +436,7 @@ export default function NetworkingPage() {
               rel="noopener noreferrer"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-lg flex items-center gap-2"
             >
-              <span>Ver galería completa</span>
+              <span>WorkShop Inteligencia Artificial</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
             </a>
           </motion.div>
