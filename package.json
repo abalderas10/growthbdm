@@ -45,7 +45,7 @@
     "lucide-react": "^0.424.0",
     "mongoose": "^8.12.1",
     "motion": "^12.4.10",
-    "next": "14.2.3",
+    "next": "14.2.35",
     "next-cloudinary": "^6.16.0",
     "next-themes": "0.3.0",
     "postcss": "^8.4.14",
