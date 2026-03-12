@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const runtime = "nodejs";
 
 const schema = z.object({
   email: z.string().email(),
@@ -10,6 +10,15 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const resendApiKey = process.env.RESEND_API_KEY;
+    if (!resendApiKey) {
+      return NextResponse.json(
+        { error: "Email service is not configured" },
+        { status: 500 }
+      );
+    }
+
+    const resend = new Resend(resendApiKey);
     const body = await request.json();
     const { email } = schema.parse(body);
 

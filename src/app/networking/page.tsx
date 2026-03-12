@@ -125,52 +125,8 @@ export default function NetworkingPage() {
   const eventName = product?.name || 'Evento de Networking';
   const eventDescription = product?.description || 'Únete a nuestro exclusivo evento de networking para conectar con profesionales del sector inmobiliario.';
   
-  // Extraer fecha y hora del campo event_date o usar valores predeterminados
-  let eventDate = '8 de Mayo 2025';
-  let eventTime = '19:00 hrs';
-  
-  // Mostrar todos los metadatos para depuración
-  console.log('Todos los metadatos del producto:', product?.metadata);
-  
-  // Procesar la fecha y hora del evento
-  if (product?.metadata?.event_date) {
-    console.log('Valor original de event_date:', product.metadata.event_date);
-    
-    // Método directo: extraer manualmente la fecha y hora
-    const dateParts = product.metadata.event_date.split('T');
-    if (dateParts.length === 2) {
-      // Extraer la fecha (YYYY-MM-DD)
-      const [year, month, day] = dateParts[0].split('-').map(Number);
-      
-      // Nombres de los meses en español
-      const monthNames = [
-        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-      ];
-      
-      if (year && month && day) {
-        eventDate = `${day} de ${monthNames[month-1]} ${year}`;
-        console.log('Fecha extraída manualmente:', eventDate);
-      }
-      
-      // Extraer la hora (H:MM:SS)
-      const timeParts = dateParts[1].split(':');
-      if (timeParts.length >= 2) {
-        const hours = parseInt(timeParts[0]);
-        const minutes = parseInt(timeParts[1]);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          eventTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes} hrs`;
-          console.log('Hora extraída manualmente:', eventTime);
-        }
-      }
-    }
-  } else if (product?.metadata?.date) {
-    eventDate = product.metadata.date;
-  }
-  
-  if (product?.metadata?.time && !product?.metadata?.event_date) {
-    eventTime = product.metadata.time;
-  }
+  const eventDate = product?.metadata?.date || '8 de Mayo 2025';
+  const eventTime = product?.metadata?.time || '19:00 hrs';
   
   const eventLocation = product?.metadata?.location || 'Torre Virreyes';
   const eventImage = product?.images?.[0] || "https://res.cloudinary.com/de4dpzh9c/image/upload/v1741501148/AI_chip_hg8jqt";

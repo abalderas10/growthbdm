@@ -1,15 +1,5 @@
 import Stripe from 'stripe';
 
-// Verificar que la clave de API existe
-if (!process.env.STRIPE_SECRET_KEY) {
-  console.error('STRIPE_SECRET_KEY no está configurada');
-  throw new Error('La variable de entorno STRIPE_SECRET_KEY es requerida');
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia',
-});
-
 export async function POST(request: Request) {
   try {
     const { priceId, productId, quantity = 1, mode = 'payment' } = await request.json();
@@ -22,6 +12,18 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecretKey) {
+      return Response.json(
+        { error: 'Stripe no está configurado' },
+        { status: 500 }
+      );
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-02-24.acacia',
+    });
 
     // Usar HTTP para localhost (desarrollo) y HTTPS para producción
     const isDevelopment = process.env.NODE_ENV === 'development';

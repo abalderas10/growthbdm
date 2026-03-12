@@ -4,18 +4,20 @@ import { NextResponse } from 'next/server';
 // Marcar explícitamente como ruta dinámica
 export const dynamic = 'force-dynamic';
 
-// Verificar que la clave de API existe
-if (!process.env.STRIPE_SECRET_KEY) {
-  console.error('STRIPE_SECRET_KEY no está configurada');
-  throw new Error('La variable de entorno STRIPE_SECRET_KEY es requerida');
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia',
-});
-
 export async function GET(request: Request) {
   try {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecretKey) {
+      return NextResponse.json(
+        { error: 'Stripe no está configurado' },
+        { status: 500 }
+      );
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-02-24.acacia',
+    });
+
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get('session_id');
 

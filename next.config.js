@@ -6,7 +6,9 @@ const nextConfig = {
       'images.unsplash.com',
       'localhost',
       'imagedelivery.net',
-      'files.stripe.com'
+      'files.stripe.com',
+      'www.growthbdm.com',
+      'growthbdm.com'
     ],
     formats: ['image/avif', 'image/webp'],
   },

@@ -4,12 +4,32 @@
 
 import { buildWispClient } from "@wisp-cms/client";
 
-if (!process.env.NEXT_PUBLIC_BLOG_ID) {
-  throw new Error('Blog ID is not configured. Please check your .env.local file.');
-}
+const blogId = process.env.NEXT_PUBLIC_BLOG_ID;
 
-export const wisp = buildWispClient({
-  blogId: process.env.NEXT_PUBLIC_BLOG_ID,
-  baseUrl: "https://www.wisp.blog",
-  // La propiedad hideAttribution no está disponible en el tipo actual
-});
+const fallbackWisp = {
+  async getPosts() {
+    return {
+      posts: [],
+      pagination: {
+        total: 0,
+        limit: 0,
+        page: 1,
+        currentPage: 1,
+        totalPages: 1,
+      },
+    };
+  },
+  async getPost() {
+    return { post: null };
+  },
+  async getTags() {
+    return { tags: [] };
+  },
+};
+
+export const wisp = (blogId
+  ? buildWispClient({
+      blogId,
+      baseUrl: "https://www.wisp.blog",
+    })
+  : fallbackWisp) as unknown as ReturnType<typeof buildWispClient>;

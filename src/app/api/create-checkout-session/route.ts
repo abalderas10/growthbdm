@@ -4,14 +4,6 @@ import Stripe from 'stripe';
 // Marcar explícitamente como ruta dinámica
 export const dynamic = 'force-dynamic';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY must be defined');
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia',
-});
-
 // Definir los IDs de productos y sus modos
 const PRODUCT_MODES = {
   'price_1QwDX6P1CcAYKMEzAHOPsdSD': 'subscription',
@@ -38,6 +30,18 @@ export async function POST(request: Request) {
       );
     }
 
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecretKey) {
+      return NextResponse.json(
+        { error: { message: 'Stripe no está configurado' } },
+        { status: 500 }
+      );
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-02-24.acacia',
+    });
+
     // Verificar que el precio existe
     try {
       const price = await stripe.prices.retrieve(priceId);
@@ -45,7 +49,7 @@ export async function POST(request: Request) {
     } catch (priceErr: unknown) {
       console.error('Error retrieving price:', priceErr);
       return NextResponse.json(
-        { error: { message: `Invalid price ID: ${priceErr as Error}.message` } },
+        { error: { message: `Invalid price ID: ${priceErr instanceof Error ? priceErr.message : 'Unknown error'}` } },
         { status: 400 }
       );
     }
