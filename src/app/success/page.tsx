@@ -55,7 +55,7 @@ function SuccessContent() {
           transition={{ delay: 0.3 }}
           className="text-3xl font-bold text-primary mb-4"
         >
-          ¡Bienvenido/a a AliEst Growth!
+          ¡Bienvenido/a a Growth Alliance!
         </motion.h1>
 
         <motion.div

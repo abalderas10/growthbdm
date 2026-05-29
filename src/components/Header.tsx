@@ -48,22 +48,28 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
             <Link
-              href="/blog"
-              className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
-            >
-              Publicación Growth
-            </Link>
-            <Link
               href="/networking"
               className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
             >
               Networking
             </Link>
             <Link
-              href="/about"
+              href="/real-estate"
               className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
             >
-              About
+              Real Estate
+            </Link>
+            <Link
+              href="/invierte-en-mexico"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+            >
+              Invierte en México
+            </Link>
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+            >
+              Blog
             </Link>
             <DarkModeToggle />
             <Button
@@ -71,7 +77,7 @@ const Header = () => {
               className="bg-blue-600 hover:bg-blue-700"
               asChild
             >
-              <Link href="/construye-alianzas">Construye Alianzas</Link>
+              <Link href="/construye-alianzas">Growth Alliance</Link>
             </Button>
           </div>
         </div>
@@ -81,22 +87,28 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link
-                href="/blog"
-                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
-              >
-                Publicación Growth
-              </Link>
-              <Link
                 href="/networking"
                 className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
               >
                 Networking
               </Link>
               <Link
-                href="/about"
+                href="/real-estate"
                 className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
               >
-                About
+                Real Estate
+              </Link>
+              <Link
+                href="/invierte-en-mexico"
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+              >
+                Invierte en México
+              </Link>
+              <Link
+                href="/blog"
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+              >
+                Blog
               </Link>
               <div className="px-3 py-2">
                 <DarkModeToggle />
@@ -106,7 +118,7 @@ const Header = () => {
                 className="w-full bg-blue-600 hover:bg-blue-700 mt-2"
                 asChild
               >
-                <Link href="/construye-alianzas">Construye Alianzas</Link>
+                <Link href="/construye-alianzas">Growth Alliance</Link>
               </Button>
             </div>
           </div>

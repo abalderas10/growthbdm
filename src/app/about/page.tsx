@@ -175,9 +175,9 @@ const Page = () => {
               <TeamProfile
                 name="Adriana Vargas Olvera"
                 role="Partner & Principal Chief Executive Officer"
-                company="Aliest - Growth"
+                company="Growth BDM"
                 location="Ciudad de México, México"
-                description="Partner & Principal Chief Executive Officer en Aliest - Growth, liderando iniciativas estratégicas y el crecimiento de la empresa desde agosto 2024."
+                description="Partner & Principal Chief Executive Officer en Growth BDM, liderando iniciativas estratégicas y el crecimiento de la empresa desde agosto 2024."
                 followers={16311}
                 connections={500}
                 imageUrl="/1602816840383.jpg"

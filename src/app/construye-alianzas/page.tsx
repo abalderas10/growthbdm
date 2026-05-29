@@ -247,7 +247,7 @@ export default function ConstruyeAlianzas() {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-700/20 dark:from-blue-400 dark:to-blue-200/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
                 <div className="relative bg-white/50 dark:bg-blue-950/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-200 shadow-xl dark:border-blue-800/30 h-full flex flex-col">
-                  <h3 className="text-2xl font-bold mb-4">AliEst Intro</h3>
+                  <h3 className="text-2xl font-bold mb-4">Growth Intro</h3>
                   <div className="mb-6">
                     <span className="text-4xl font-bold">Sin Costo</span>
                   </div>
@@ -258,7 +258,7 @@ export default function ConstruyeAlianzas() {
                   <ul className="space-y-4 mb-8 flex-grow">
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-1" />
-                      <span>Reunión de Presentación, donde conocerás el ecosistema de AliEst y Growth Business Development.</span>
+                      <span>Reunión de Presentación, donde conocerás el ecosistema de Growth BDM.</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-1" />
@@ -278,7 +278,7 @@ export default function ConstruyeAlianzas() {
                 </div>
               </motion.div>
 
-              {/* AliEst Growth Plan */}
+              {/* Growth Alliance Plan */}
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: 20 },
@@ -295,7 +295,7 @@ export default function ConstruyeAlianzas() {
                   <div className="absolute -top-3 right-4 bg-blue-500 dark:bg-blue-400 px-3 py-1 rounded-full text-sm font-medium text-white dark:text-blue-200">
                     Recomendado
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">AliEst Growth</h3>
+                  <h3 className="text-2xl font-bold mb-4">Growth Alliance</h3>
                   <div className="mb-6">
                     <span className="text-4xl font-bold">$6,500</span>
                     <span className="text-gray-600 dark:text-blue-200/80"> MXN/mes</span>
@@ -323,7 +323,7 @@ export default function ConstruyeAlianzas() {
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-1" />
-                      <span>Publicación y Difusión en la Red de AliEst, aumentando visibilidad y reconocimiento.</span>
+                      <span>Publicación y Difusión en la Red de Growth BDM, aumentando visibilidad y reconocimiento.</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-1" />
@@ -364,7 +364,7 @@ export default function ConstruyeAlianzas() {
                     <span className="text-gray-600 dark:text-blue-200/80"> MXN/pago único</span>
                   </div>
                   <p className="text-gray-600 dark:text-blue-200/80 mb-6">
-                    Una solución diseñada para empresas que buscan validación inmediata y acceso directo a la red de negocios de AliEst.
+                    Una solución diseñada para empresas que buscan validación inmediata y acceso directo a la red de negocios de Growth BDM.
                   </p>
                   <div className="text-lg font-semibold mb-4">Incluye:</div>
                   <ul className="space-y-4 mb-8 flex-grow">
@@ -378,7 +378,7 @@ export default function ConstruyeAlianzas() {
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-1" />
-                      <span>Publicación y Posicionamiento en la Red de AliEst y Growth Business Development, fortaleciendo la presencia de tu empresa.</span>
+                      <span>Publicación y Posicionamiento en la Red de Growth BDM y Growth Business Development, fortaleciendo la presencia de tu empresa.</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-1" />
@@ -410,7 +410,7 @@ export default function ConstruyeAlianzas() {
             className="container mx-auto px-4"
           >
             <h2 className="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-200">
-              ¿Por qué formar parte de AliEst Growth?
+              ¿Por qué formar parte de Growth Alliance?
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
               <div className="group relative">
@@ -467,7 +467,7 @@ export default function ConstruyeAlianzas() {
               <div className="relative bg-white/50 dark:bg-blue-950/30 backdrop-blur-sm p-12 rounded-2xl border border-gray-200 dark:border-blue-800/30 shadow-xl transition-transform duration-500 group-hover:-translate-y-2">
                 <div className="text-center mb-12">
                   <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-200">
-                    Únete a AliEst Growth y Expande tu Negocio
+                    Únete a Growth Alliance y Expande tu Negocio
                   </h2>
                   <p className="text-xl text-gray-600 dark:text-blue-200/80">
                     Si estás listo para llevar tu empresa al siguiente nivel, agenda una reunión con nosotros y descubre cómo podemos ayudarte a crecer.
