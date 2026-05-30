@@ -2,18 +2,20 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Verificar rutas protegidas
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    // Validación de API routes
+  // /admin solo es accesible directamente — no aparece en nav ni sitemap
+  // La autenticación se maneja en la propia página con contraseña
+  if (request.nextUrl.pathname.startsWith('/admin')) {
     return NextResponse.next();
   }
 
-  // Validación de rutas de networking
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname.startsWith('/networking/')) {
     return NextResponse.next();
   }
 
-  // Validación de rutas del blog
   if (request.nextUrl.pathname.startsWith('/blog/')) {
     return NextResponse.next();
   }
@@ -23,6 +25,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/admin/:path*',
     '/api/:path*',
     '/networking/:path*',
     '/blog/:path*',

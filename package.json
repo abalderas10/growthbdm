@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
     "@calcom/embed-react": "^1.5.2",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
