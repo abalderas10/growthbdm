@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
+import { getResendFrom, isResendSandboxSender } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -23,8 +24,15 @@ export async function POST(request: Request) {
     const { email } = schema.parse(body);
 
     // Enviar email de confirmación
+    if (isResendSandboxSender()) {
+      console.warn(
+        "[newsletter] RESEND_FROM_EMAIL no configurado. Se usa el sandbox de Resend, " +
+          "que solo entrega al email de la cuenta."
+      );
+    }
+
     await resend.emails.send({
-      from: "Growth BDM <onboarding@resend.dev>",
+      from: getResendFrom(),
       to: [email],
       subject: "¡Bienvenido al Newsletter de Growth BDM!",
       html: `

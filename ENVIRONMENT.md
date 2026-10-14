@@ -20,8 +20,26 @@ CLOUDINARY_API_SECRET=tu_api_secret_de_cloudinary
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=tu_publishable_key_de_stripe
 STRIPE_SECRET_KEY=tu_secret_key_de_stripe
 
+# Resend (formulario de contacto y newsletter)
+RESEND_API_KEY=re_tu_api_key
+RESEND_FROM_EMAIL=Growth BDM <hola@growthbdm.com>
+
 # Base URL
 NEXT_PUBLIC_BASE_URL=http://localhost:3022
+```
+
+## Remitente de correo (`RESEND_FROM_EMAIL`)
+
+Si no se define, las rutas usan el sandbox `onboarding@resend.dev`, que
+**solo entrega al email de la cuenta propietaria**: los mensajes del formulario
+de contacto y del newsletter no llegan a `contacto@growthbdm.com` aunque la API
+responda con éxito.
+
+Para envío real hay que verificar un dominio propio en
+[Resend](https://resend.com/domains) y definir:
+
+```
+RESEND_FROM_EMAIL=Growth BDM <hola@growthbdm.com>
 ```
 
 ## Obtener Credenciales

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
+import { escapeHtml, getResendFrom, isResendSandboxSender } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -25,19 +26,32 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, message, company } = schema.parse(body);
 
+    // Todo lo que viene del usuario se escapa antes de interpolarse en el HTML.
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message);
+    const safeCompany = company ? escapeHtml(company) : "";
+
+    if (isResendSandboxSender()) {
+      console.warn(
+        "[contact] RESEND_FROM_EMAIL no configurado. Se usa el sandbox de Resend, " +
+          "que solo entrega al email de la cuenta: los mensajes no llegarán a contacto@growthbdm.com."
+      );
+    }
+
     await resend.emails.send({
-      from: "Growth BDM <onboarding@resend.dev>",
+      from: getResendFrom(),
       to: ["contacto@growthbdm.com"],
-      subject: `Nuevo mensaje de contacto de ${name}`,
+      subject: `Nuevo mensaje de contacto de ${safeName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #004b8d;">Nuevo mensaje de contacto</h2>
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px;">
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            ${company ? `<p><strong>Empresa:</strong> ${company}</p>` : ""}
+            <p><strong>Nombre:</strong> ${safeName}</p>
+            <p><strong>Email:</strong> ${safeEmail}</p>
+            ${safeCompany ? `<p><strong>Empresa:</strong> ${safeCompany}</p>` : ""}
             <p><strong>Mensaje:</strong></p>
-            <p style="white-space: pre-wrap;">${message}</p>
+            <p style="white-space: pre-wrap;">${safeMessage}</p>
           </div>
         </div>
       `,
