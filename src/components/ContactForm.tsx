@@ -33,11 +33,24 @@ export default function ContactForm() {
     try {
       const validatedData = contactSchema.parse(formData);
 
-      // Aquí enviaríamos los datos a un endpoint
-      // Por ahora solo mostramos un toast de éxito
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(validatedData),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          result?.error || 'No pudimos enviar tu mensaje. Intenta de nuevo.'
+        );
+      }
+
+      // Solo se confirma éxito cuando el servidor respondió 2xx: antes se
+      // mostraba un toast de "Mensaje enviado" sin haber enviado nada.
       toast.success('¡Mensaje enviado! Te contactaremos pronto.');
-      
-      // Limpiamos el formulario
+
       setFormData({
         name: '',
         email: '',
@@ -50,7 +63,11 @@ export default function ContactForm() {
           toast.error(err.message);
         });
       } else {
-        toast.error('Hubo un error al enviar el mensaje');
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Hubo un error al enviar el mensaje'
+        );
       }
     } finally {
       setLoading(false);
