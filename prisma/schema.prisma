@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Para el formulario de contacto
+// Leads del formulario de contacto
 model Contact {
   id        String   @id @default(cuid())
   name      String
@@ -15,13 +15,79 @@ model Contact {
   company   String?
   message   String   @db.Text
   status    String   @default("PENDING") // "PENDING", "CONTACTED", "COMPLETED"
+  source    String   @default("website")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([status])
+  @@index([createdAt])
   @@map("contacts")
 }
 
-// Para las reuniones agendadas
+// Suscriptores del newsletter
+model NewsletterSubscriber {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  status        String    @default("ACTIVE") // "ACTIVE", "UNSUBSCRIBED"
+  subscribedAt  DateTime  @default(now())
+  unsubscribedAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("newsletter_subscribers")
+}
+
+// Códigos de invitación que dan acceso gratuito a un evento
+model InviteCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  label     String?
+  isActive  Boolean   @default(true)
+  maxUses   Int?
+  usedCount Int       @default(0)
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([isActive])
+  @@map("invite_codes")
+}
+
+// Reservas de evento (con o sin pago)
+model Reservation {
+  id       String @id @default(cuid())
+
+  // Datos de la persona
+  name     String
+  email    String
+  phone    String?
+  company  String?
+
+  // Código de invitación aplicado, si hubo
+  inviteCode    String?
+  hasValidCode  Boolean  @default(false)
+
+  // Pago
+  // "PENDING" (aún no paga), "PAID", "FREE" (entró con código), "CANCELLED"
+  status          String  @default("PENDING")
+  stripeSessionId String? @unique
+  amountCents     Int?
+
+  // Evento
+  eventName String?
+  eventDate DateTime?
+
+  notes     String?   @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("reservations")
+}
+
+// Citas / reuniones agendadas
 model Meeting {
   id          String   @id @default(cuid())
   name        String
@@ -29,11 +95,13 @@ model Meeting {
   company     String?
   meetingType String   // "DISCOVERY", "PROPOSAL", "FOLLOW_UP"
   meetingDate DateTime
-  duration    Int      // duración en minutos
+  duration    Int // duración en minutos
   notes       String?  @db.Text
   status      String   @default("PENDING") // "PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([meetingDate])
+  @@index([status])
   @@map("meetings")
 }
