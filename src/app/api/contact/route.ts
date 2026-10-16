@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { escapeHtml, getResendFrom, isResendSandboxSender } from "@/lib/email";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -21,6 +22,14 @@ const schema = z.object({
  * (mandar el email y fallar el guardado) se perdían leads en silencio.
  */
 export async function POST(request: Request) {
+  const limit = rateLimit(`contact:${clientIp(request)}`, 5, 10 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Demasiados envíos. Espera unos minutos e inténtalo de nuevo." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+    );
+  }
+
   let payload: z.infer<typeof schema>;
 
   try {

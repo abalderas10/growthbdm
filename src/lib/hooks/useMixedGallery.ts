@@ -38,7 +38,7 @@ export function useMixedGallery() {
         setIsUsingFallback(true);
       }
     }
-  }, [cloudinaryImages, error]);
+  }, [cloudinaryImages, error, isUsingFallback]);
 
   return {
     images: mixedImages,

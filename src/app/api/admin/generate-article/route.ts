@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { requireAdmin } from "@/lib/admin-auth";
 
 const SYSTEM_PROMPT = `Eres el editor de contenido de Growth BDM, empresa mexicana de Business Development Management especializada en Real Estate, inversión, networking estratégico y consultoría para empresas que quieren operar en México.
 
@@ -50,10 +51,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { category, customTopic, audience, tone, password } = body;
 
-    const adminPassword = process.env.ADMIN_BLOG_PASSWORD;
-    if (!adminPassword || password !== adminPassword) {
-      return Response.json({ error: "Acceso no autorizado" }, { status: 401 });
-    }
+    // Cada llamada cuesta tokens de un modelo caro. Antes solo había un
+    // `!==` contra la contraseña: quien la tuviera podía generar artículos
+    // sin límite. 20 por hora.
+    const auth = requireAdmin(request, {
+      password,
+      scope: "generate-article",
+      budget: 20,
+      windowMs: 60 * 60 * 1000,
+    });
+    if (!auth.ok) return auth.response;
 
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
