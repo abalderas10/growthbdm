@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { validateInviteCode } from "@/lib/invite-codes";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,6 +41,18 @@ function baseUrlFrom(request: Request): string {
  * esta API a mano para obtener una reserva gratis saltándose el pago.
  */
 export async function POST(request: Request) {
+  const limit = rateLimit(
+    `reservation:${clientIp(request)}`,
+    5,
+    10 * 60 * 1000
+  );
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Espera unos minutos e inténtalo de nuevo." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+    );
+  }
+
   try {
     const body = await request.json();
     const parsed = schema.safeParse(body);

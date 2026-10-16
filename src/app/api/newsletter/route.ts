@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getResendFrom, isResendSandboxSender } from "@/lib/email";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -17,6 +18,14 @@ const schema = z.object({
  * best-effort: si Resend falla la suscripción no se pierde.
  */
 export async function POST(request: Request) {
+  const limit = rateLimit(`newsletter:${clientIp(request)}`, 3, 10 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Espera unos minutos e inténtalo de nuevo." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+    );
+  }
+
   let email: string;
 
   try {

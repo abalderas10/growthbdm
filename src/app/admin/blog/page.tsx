@@ -441,7 +441,7 @@ export default function AdminBlogPage() {
                 {linkedin && (
                   <div className="mt-3 bg-blue-950/30 border border-blue-900/30 rounded-xl p-3">
                     <p className="text-xs text-blue-300 font-medium mb-1">Antes de publicar</p>
-                    <p className="text-xs text-blue-200/80">Reemplaza "growthbdm.com/blog" con la URL exacta del artículo que acabas de publicar en Wisp.</p>
+                    <p className="text-xs text-blue-200/80">Reemplaza &quot;growthbdm.com/blog&quot; con la URL exacta del artículo que acabas de publicar en Wisp.</p>
                   </div>
                 )}
               </div>

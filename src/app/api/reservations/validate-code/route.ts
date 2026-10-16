@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { validateInviteCode } from "@/lib/invite-codes";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,6 +18,21 @@ const schema = z.object({
  * los códigos que existen en la organización.
  */
 export async function POST(request: Request) {
+  // Tope más alto que el de creación porque el usuario escribe y reintenta,
+  // pero acotado: sin esto, este endpoint es un oráculo para fuerza bruta
+  // sobre los códigos de invitación.
+  const limit = rateLimit(
+    `validate-code:${clientIp(request)}`,
+    20,
+    10 * 60 * 1000
+  );
+  if (!limit.ok) {
+    return NextResponse.json(
+      { isValid: false, error: "Demasiados intentos. Espera unos minutos." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+    );
+  }
+
   try {
     const body = await request.json();
     const parsed = schema.safeParse(body);
